@@ -1,0 +1,1 @@
+sciter\packfolder.exe ui source\resources.cpp -v "resources"

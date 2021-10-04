@@ -1,38 +1,36 @@
-#include <GLFW/glfw3.h>
+#include "sciter/sciter-x.h"
+#include "sciter/sciter-x-window.hpp"
 
-int main(void)
-{
-    GLFWwindow* window;
+class frame: public sciter::window {
+public:
+  frame() : window(SW_TITLEBAR | SW_RESIZEABLE | SW_CONTROLS | SW_MAIN | SW_ENABLE_DEBUG) {}
 
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
+  // passport - lists native functions and properties exposed to script under 'frame' interface name:
+  SOM_PASSPORT_BEGIN(frame)
+    SOM_FUNCS(
+      SOM_FUNC(nativeMessage)
+    )
+  SOM_PASSPORT_END
+  
+  // function expsed to script:
+  sciter::string  nativeMessage() { return WSTR("Hello hello World"); }
 
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
+};
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
-	glClearColor(1,0,0,1);
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+#include "resources.cpp" // resources packaged into binary blob.
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+int uimain(std::function<int()> run ) {
 
-        /* Poll for and process events */
-        glfwPollEvents();
-    }
+  sciter::archive::instance().open(aux::elements_of(resources)); // bind resources[] (defined in "resources.cpp") with the archive
 
-    glfwTerminate();
-    return 0;
+  sciter::om::hasset<frame> pwin = new frame();
+
+  // note: this:://app URL is dedicated to the sciter::archive content associated with the application
+  pwin->load( WSTR("this://app/main.htm") );
+  //or use this to load UI from  
+  //  pwin->load( WSTR("file:///home/andrew/Desktop/Project/res/main.htm") );
+  
+  pwin->expand();
+
+  return run();
 }
-//https://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Tutorial_Text_Rendering_01
