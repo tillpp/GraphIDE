@@ -10,13 +10,6 @@ file(GLOB_RECURSE SRCFILES CONFIGURE_DEPENDS "source/*.cpp" "source/*.h" "source
 
 add_executable(GIDE ${SRCFILES})
 
-add_custom_Target(
-	uicompile
-	COMMAND uicompile.bat
-	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-ADD_DEPENDENCIES(GIDE uicompile)
-
 #use c++17
 set(CMAKE_CXX_STANDARD 17)
 target_compile_features(GIDE PRIVATE cxx_std_17)
@@ -26,8 +19,16 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -municode -std=c++17 -Wl,-subsystem,wind
 set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};${CMAKE_CURRENT_LIST_DIR}/lib")
 include_directories("${CMAKE_CURRENT_LIST_DIR}/include" "${CMAKE_CURRENT_LIST_DIR}/source")
 
+#sciter - compile files
+if(win32)
+	add_custom_Target(
+		uicompile
+		COMMAND uicompile.bat
+		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+	)
+	ADD_DEPENDENCIES(GIDE uicompile)
+endif();
 #use libraries
-
 #find_library(GLEW_LIB glew32)
 #target_link_libraries(GIDE PRIVATE "${GLEW_LIB}" "opengl32" "${SFML_NETWORK_LIB}" "${SFML_GRAPHICS_LIB}" "${SFML_SYSTEM_LIB}" "${SFML_WINDOW_LIB}" )
 target_link_libraries(GIDE PRIVATE)

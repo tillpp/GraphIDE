@@ -44,4 +44,3 @@ sciter-win-main.cpp
 
 #fonts
 res/font/*
-CMakeLists.txt
