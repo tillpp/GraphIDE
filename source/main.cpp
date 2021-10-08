@@ -1,36 +1,29 @@
-#include "sciter/sciter-x.h"
-#include "sciter/sciter-x-window.hpp"
+#include <iostream>
+#include <math.h>
+#include "Application/Application.h"
+#include "Application/FPSCounter.h"
+#include "Application/GuiHandler.h"
+#include "Util/Log.h"
 
-class frame: public sciter::window {
-public:
-  frame() : window(SW_TITLEBAR | SW_RESIZEABLE | SW_CONTROLS | SW_MAIN | SW_ENABLE_DEBUG) {}
+int main()
+{
+  Log::info("Starting...");  
+  Application *app = new Application("title", 1280, 720);
+  app->registerFeature(new FPSCounter);
 
-  // passport - lists native functions and properties exposed to script under 'frame' interface name:
-  SOM_PASSPORT_BEGIN(frame)
-    SOM_FUNCS(
-      SOM_FUNC(nativeMessage)
-    )
-  SOM_PASSPORT_END
-  
-  // function expsed to script:
-  sciter::string  nativeMessage() { return WSTR("Hello hello World"); }
 
-};
-
-#include "resources.cpp" // resources packaged into binary blob.
-
-int uimain(std::function<int()> run ) {
-
-  sciter::archive::instance().open(aux::elements_of(resources)); // bind resources[] (defined in "resources.cpp") with the archive
-
-  sciter::om::hasset<frame> pwin = new frame();
-
-  // note: this:://app URL is dedicated to the sciter::archive content associated with the application
-  pwin->load( WSTR("this://app/main.htm") );
-  //or use this to load UI from  
-  //  pwin->load( WSTR("file:///home/andrew/Desktop/Project/res/main.htm") );
-  
-  pwin->expand();
-
-  return run();
+  struct BackgroundDisco
+      : public ApplicationFeature
+  {
+    float i = 0;
+    void draw(Application *app) {}
+    void update(Application *app)
+    {
+	    glClearColor(pow(sin(i / 10),0.5) / 2 + 0.5, 0, 0, 1);
+      i++;
+    }
+  };
+  app->registerFeature(new BackgroundDisco); 
+  app->registerFeature(new GuiHandler);
+  getchar();
 }
