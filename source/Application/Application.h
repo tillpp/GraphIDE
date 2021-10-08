@@ -5,6 +5,7 @@
 #include <thread>
 #include <mutex>
 #include <vector>
+#include <queue>
 #include "ApplicationFeature.h"
 
 class Application
@@ -17,6 +18,7 @@ class Application
 	//data
 	sf::RenderWindow window;
 	std::vector<ApplicationFeature*> features;
+	std::queue<ApplicationFeature*> uninitializedFeatures;
 public:
 	Application(std::string title="",size_t width=1280,size_t height=720);
 	~Application();

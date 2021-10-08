@@ -14,6 +14,7 @@ public:
 	FPSCounter();
 	~FPSCounter();
 
+	void init(Application*)override {}
 	void draw(Application*)override;
 	void update(Application*)override;
 	

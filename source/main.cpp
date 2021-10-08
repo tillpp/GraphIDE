@@ -16,6 +16,7 @@ int main()
       : public ApplicationFeature
   {
     float i = 0;
+    void init(Application*)override {}
     void draw(Application *app) {}
     void update(Application *app)
     {

@@ -53,6 +53,13 @@ void Application::run(std::string title,size_t width,size_t height)
 		sf::sleep(sf::milliseconds(1));
 		mutex.lock();
 		window.setActive(true);
+
+		//init uninitiled features
+		while(!uninitializedFeatures.empty()){
+			uninitializedFeatures.front()->init(this);
+			uninitializedFeatures.pop();
+		}
+
 		//event handling
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -84,6 +91,7 @@ void Application::close(){
 void Application::registerFeature(ApplicationFeature* feature){
 	mutex.lock();
 	features.push_back(feature);
+	uninitializedFeatures.push(feature);
 	mutex.unlock();
 }
 void Application::setBackgroundColor(GLclampf red,GLclampf green,GLclampf blue,GLclampf alpha){
