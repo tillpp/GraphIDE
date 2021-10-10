@@ -27,4 +27,5 @@ public:
 	void registerFeature(ApplicationFeature* feature);
 
 	void setBackgroundColor(GLclampf red,GLclampf green,GLclampf blue,GLclampf alpha=1);
+	void record();
 };

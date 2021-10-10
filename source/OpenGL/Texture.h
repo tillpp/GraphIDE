@@ -10,6 +10,7 @@ struct TextureSettings
 {
 	int Mipmaplevel = 0;
 	bool linearInterpolation = true;
+	bool flipVertically = false;
 	TextureSettings() {}
 };
 class Texture

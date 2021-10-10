@@ -93,6 +93,8 @@ void Texture::LoadFromTexture(
 
 	//load it
 	sf::Image texture = inTexture.copyToImage();
+	if(inSettings.flipVertically)
+		texture.flipVertically();
 
 	sizex = texture.getSize().x;
 	sizey = texture.getSize().y;

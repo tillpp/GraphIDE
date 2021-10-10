@@ -101,3 +101,8 @@ void Application::setBackgroundColor(GLclampf red,GLclampf green,GLclampf blue,G
 	window.setActive(false);
 	mutex.unlock();
 }
+void Application::record(){
+	mutex.lock();
+	window.setActive(true);
+	mutex.unlock();
+}
