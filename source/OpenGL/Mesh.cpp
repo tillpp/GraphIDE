@@ -75,6 +75,7 @@ void Mesh::LoadFromVertexArray(std::vector<GLfloat> inVertexArray, std::vector<G
 void Mesh::create()
 {
 	mutex.lock();
+	alreadyCreated = true;
 	//create a Vertex Buffer Object
 	glGenBuffers(1, &mVBO);
 	//create a Vertex Buffer Object
@@ -123,4 +124,31 @@ void Mesh::draw(Shader &inShader, glm::mat4 parentMatrix)
 		glDrawArrays(GL_TRIANGLES, 0, mVertexCount);
 	glBindVertexArray(0);
 	mutex.unlock();
+}
+bool Mesh::isCreated(){
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	return alreadyCreated;
+}
+std::recursive_mutex& Mesh::getMutex(){
+	return mutex;
+}
+
+Mesh Mesh::theRectangle;
+Mesh& Mesh::rectangle(){
+	std::lock_guard<std::recursive_mutex> lock(theRectangle.getMutex());
+	if(theRectangle.isCreated())
+		return theRectangle;
+	theRectangle.create();
+	theRectangle.LoadFromVertexArray({
+		0,0,0, 0,0,
+		0,1,0, 0,1,
+		1,1,0, 1,1,
+		0,0,0, 0,0,
+		1,0,0, 1,0,
+		1,1,0, 1,1,
+	},6);
+	theRectangle.setSettingRead(0,3,false,5,0);
+	theRectangle.setSettingRead(1,2,false,5,2);	
+
+	return theRectangle;
 }

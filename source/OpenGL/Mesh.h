@@ -30,6 +30,8 @@ class Mesh
 
  	glm::mat4 mMatrix = glm::mat4(1.f);
  	size_t mVertexCount = 0;
+
+	bool alreadyCreated = false;
 public:
 	void move(glm::mat4 change);
 	void set(glm::mat4 change);
@@ -39,5 +41,12 @@ public:
  	void setSettingRead(unsigned int inLayer, Byte inSizeOfVec, bool inNormal, unsigned int inStride, unsigned int inOffset);
  	void draw(Shader& inShader,glm::mat4 =  glm::mat4(1.f));
  	void create();
+
+	bool isCreated();
+	std::recursive_mutex& getMutex();
+
+	static Mesh& rectangle();
+private:
+	static Mesh theRectangle;
 };
 
