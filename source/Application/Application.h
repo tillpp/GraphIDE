@@ -8,6 +8,10 @@
 #include <queue>
 #include "ApplicationFeature.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 class Application
 {
 	//thread
@@ -28,4 +32,6 @@ public:
 
 	void setBackgroundColor(GLclampf red,GLclampf green,GLclampf blue,GLclampf alpha=1);
 	void record();
+
+	glm::vec2 getSize();
 };

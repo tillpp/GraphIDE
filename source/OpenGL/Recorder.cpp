@@ -1,7 +1,9 @@
 #include "Recorder.h"
 
 void Recorder::create(int width,int height){
-	renderTexture.create(width,height);
+	mutex.lock();
+	renderTexture.create(width,height,sf::ContextSettings(32));
+	mutex.unlock();
 }
 
 void Recorder::record(){
@@ -17,6 +19,9 @@ void Recorder::save(){
 	TextureSettings settings;
 	settings.flipVertically=true;
 	
+	//DEBUGLINE DELETE ME!
+	renderTexture.getTexture().copyToImage().saveToFile("test.png");
+
 	texture.LoadFromTexture(renderTexture.getTexture(),settings);
 	mutex.unlock();
 }

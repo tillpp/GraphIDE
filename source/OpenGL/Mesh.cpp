@@ -140,15 +140,15 @@ Mesh& Mesh::rectangle(){
 		return theRectangle;
 	theRectangle.create();
 	theRectangle.LoadFromVertexArray({
-		0,0,0, 0,0,
-		0,1,0, 0,1,
-		1,1,0, 1,1,
-		0,0,0, 0,0,
-		1,0,0, 1,0,
-		1,1,0, 1,1,
+		0,0,0, 0,1,
+		0,1,0, 0,0,
+		1,1,0, 1,0,
+		0,0,0, 0,1,
+		1,0,0, 1,1,
+		1,1,0, 1,0,
 	},6);
 	theRectangle.setSettingRead(0,3,false,5,0);
-	theRectangle.setSettingRead(1,2,false,5,2);	
+	theRectangle.setSettingRead(1,2,false,5,3);	
 
 	return theRectangle;
 }

@@ -4,10 +4,10 @@
 #include "OpenGL/Shader.h"
 #include "OpenGL/Mesh.h"
 #include "OpenGL/Texture.h"
-#include "OpenGL/Camera.h"
 
 #include "OpenGL/Recorder.h"
-
+#include "Gui/Sprite.h"
+#include "Gui/Scene.h"
 /*
 	A GuiHandler is used to handle the Gui.
 */
@@ -20,8 +20,12 @@ class GuiHandler
 	//test stuff
 	Shader shader;
 	Mesh mesh;
-	Camera camera;
+	Scene camera = Scene(glm::vec2(1280,720));;
 	Recorder recorder;
+
+	//test test stuff
+	Sprite sprite;
+
 public:
 	GuiHandler();
 	~GuiHandler();

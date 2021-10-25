@@ -1,4 +1,5 @@
 #include "GuiComponent.h"
+#include <iostream>
 
 GuiComponent::GuiComponent(/* args */)
 {
@@ -7,12 +8,6 @@ GuiComponent::GuiComponent(/* args */)
 GuiComponent::~GuiComponent()
 {
 }
-bool GuiComponent::getNeedRedraw(){
-	std::lock_guard<std::recursive_mutex> lock(mutex);
-	return needRedraw;
-}
-void GuiComponent::setNeedRedraw(bool inNeedRedraw){
-	mutex.lock();
-	needRedraw = inNeedRedraw;
-	mutex.unlock();
+void GuiComponent::draw(Shader& shader,Camera& camera,glm::mat4 inMatrix){
+	
 }

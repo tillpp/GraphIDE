@@ -33,7 +33,7 @@ void Application::run(std::string title,size_t width,size_t height)
 	window.create(sf::VideoMode(width,height), title , sf::Style::Default, settings);
 	window.setVerticalSyncEnabled(true);
 	window.setActive(true);
-	window.setFramerateLimit(60);
+	window.setFramerateLimit(30);
 
 	auto err = glewInit();
 	if (err != GLEW_OK)
@@ -105,4 +105,9 @@ void Application::record(){
 	mutex.lock();
 	window.setActive(true);
 	mutex.unlock();
+}
+glm::vec2 Application::getSize(){
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	auto size = window.getSize();
+	return glm::vec2(size.x, size.y);
 }

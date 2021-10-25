@@ -1,5 +1,6 @@
 #include "GuiHandler.h"
 #include <iostream>
+#include "OpenGL/TextureManager.h"
 
 GuiHandler::GuiHandler()
 {
@@ -8,7 +9,7 @@ GuiHandler::GuiHandler()
 GuiHandler::~GuiHandler()
 {
 }
-void GuiHandler::init(Application*){
+void GuiHandler::init(Application* app){
 	mutex.lock();
 	recorder.create(1280,720);
 
@@ -26,10 +27,25 @@ void GuiHandler::init(Application*){
 	mesh.setSettingRead(0,3,false,5,0);
 	mesh.setSettingRead(1,2,false,5,3);
 	mutex.unlock();
+
+	sprite.setTexture(TextureManager::loadFromFile("res/texture/logo_gide.png"));
 }
 bool once = false;
 void GuiHandler::draw(Application* app){
 	mutex.lock();
+
+    camera.setSize(app->getSize());
+
+	app->record();
+	shader.use();
+	camera.use(shader);
+	sprite.draw(shader,camera);
+
+	mutex.unlock();
+	return;
+
+	mutex.lock();
+
 	if(!once)
 		recorder.record();
 	else app->record();
@@ -42,8 +58,9 @@ void GuiHandler::draw(Application* app){
 		Texture::whiteTexture().use(0,shader,"texture1");
 	else 
 		recorder.use(0,shader,"texture1");
-	mesh.draw(shader);
 
+	mesh.draw(shader);
+	
 	if(!once){
 		recorder.save();
 		once = true;
