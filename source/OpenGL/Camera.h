@@ -10,8 +10,10 @@
 
 class Camera
 {
+protected:
 	glm::mat4 viewProjection = glm::mat4(1.f);
 public:
 	void use(Shader& shader);
+	 
 };
 
