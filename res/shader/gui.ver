@@ -6,10 +6,12 @@ layout (location = 1) in vec2 texCoord;
 uniform mat4 VP;
 uniform mat4 model;
 
+uniform vec4 textureRect;
+
 out vec2 frag_texCoord;
 
 void main(void)
 {
-	frag_texCoord = texCoord;
+	frag_texCoord = textureRect.xy+textureRect.zw*texCoord;
    	gl_Position = VP * model * vec4(vertex,1.0);
 }

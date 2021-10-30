@@ -1,171 +1,109 @@
-// #include "Text.h"
-// #include "system/Input.h"
+#include "Text.h"
+#include "OpenGL/Mesh.h"
+#include <mutex>
 
-// sf::Font Text::standartFont;
+sf::Font Text::standartFont;
+bool standartFontIsInitialzed = false;
+std::recursive_mutex standartFontMutex;
 
-// Text::Text(/* args */)
-// {
-// }
+Text::Text()
+{
+	std::lock_guard<std::recursive_mutex> lock(standartFontMutex);
+	if(!standartFontIsInitialzed){
+		standartFont.loadFromFile("res/font/arial.ttf");	
+		standartFontIsInitialzed = true;
+	}
 
-// GLuint Text::VAO = -1, Text::VBO;
-// void Text::init()
-// {
-// 	if (VAO != -1)
-// 		return;
+	font = &standartFont;
+	//matrix = glm::scale(matrix,glm::vec3(30,30,1));
+}
 
-// 	standartFont.loadFromFile("res/font/arial.ttf");
+Text::~Text()
+{
+}
+void Text::setUtf8(std::string data)
+{
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	text = sf::String::fromUtf8(data.begin(), data.end());
+}
 
-// 	glGenVertexArrays(1, &VAO);
-// 	glGenBuffers(1, &VBO);
+void Text::draw(Shader& shader,Camera& camera,glm::mat4 inMatrix){
+ 	std::lock_guard<std::recursive_mutex> lock(mutex);
+	size_t characterSize = 32;
 
-// 	glBindVertexArray(VAO);
-// 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//Text has changed
+	if (text != lastText)
+ 	{
+		font->getGlyph('|', 32, 0, 0);
+ 		for (size_t i = 0; i < text.getSize(); i++)
+		{
 
-// 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 5, NULL, GL_DYNAMIC_DRAW);
-// 	glEnableVertexAttribArray(0);
-// 	glEnableVertexAttribArray(1);
-// 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
-// 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
-// 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+			font->getGlyph(text[i], characterSize, 0, 0);
+		}
 
-// 	glBindVertexArray(0);
-// }
+		texture.LoadFromTexture(font->getTexture(characterSize));
+		lastText = text;
+	}
 
-// Text::~Text()
-// {
-// }
+	//text hasnt changed
+	shader.use();
 
-// void Text::updateMatrix(float parent_sizex, float parent_sizey)
-// {
-// 	//updating size befor origin is calculated
-// 	sizex(parent_sizex);
-// 	sizey(parent_sizey);
+	//uniforms
+	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "color"),color.r,color.g,color.b,color.a);
+	camera.use(shader);
+	texture.use(0, shader, "texture1");
+	
+	GLfloat offset = 0;
+	GLfloat baseline = 1 - (font->getUnderlinePosition(characterSize) + font->getUnderlineThickness(characterSize));
 
-// 	//updating the matrix
-// 	matrix = glm::mat4(1.0f);
-// 	matrix = glm::translate(matrix, glm::vec3(positionx(parent_sizex), positiony(parent_sizey), 0));
-// 	matrix = glm::rotate(matrix, glm::radians(rotation), glm::vec3(0.0, 0.0, 1.0));
-// 	matrix = glm::translate(matrix, -glm::vec3(originx(sizex), originy(sizey), 0));
-// 	attachMatrix = matrix;
-// 	matrix = glm::scale(matrix, glm::vec3(sizey(parent_sizey), sizey(parent_sizey), 1));
-// 	//Text sizex is dependent by sizey
-// }
-// void Text::draw(
-// 	Scene &scene,
-// 	float parent_sizex,
-// 	float parent_sizey,
-// 	glm::mat4 parent_matrix)
-// {
+	float one = font->getLineSpacing(characterSize);
+	float debugScale = 1.f / one;
 
-// 	size_t characterSize = 32;
+	for (size_t i = 0; i < text.getSize(); i++)
+	{
+		auto glyph = font->getGlyph(text[i], characterSize, 0, 0);
+		//tab
+		if (text[i] == '\t')
+		{
+			glyph = font->getGlyph(' ', characterSize, 0, 0);
 
-// 	if (text != lastText)
-// 	{
-// 		font->getGlyph('|', 32, 0, 0);
+			float tabsize = glyph.advance*4;
+			int tabs = (int)offset/tabsize;
 
-// 		for (size_t i = 0; i < text.getSize(); i++)
-// 		{
+			if(tabsize*tabs==offset)
+				 offset += tabsize;
+			else offset = (tabs+1)*tabsize;
+			continue;
+		}
+		if (i)
+			offset += font->getKerning(text[i - 1], text[i], characterSize);
 
-// 			font->getGlyph(text[i], characterSize, 0, 0);
-// 		}
-// 		font->getTexture(characterSize).copyToImage().saveToFile("test.png");
-// 		texture.LoadFromTexture(font->getTexture(characterSize));
+		GLfloat ypos = glyph.bounds.top + baseline + one;
+		GLfloat xpos = glyph.bounds.left + offset;
+		GLfloat height = glyph.bounds.height;
+		GLfloat width = glyph.bounds.width;
 
-// 		lastText = text;
-// 	}
-// 	gui_shader.use();
-// 	scene.use(gui_shader);
-// 	texture.use(0, gui_shader, "texture1");
+		GLfloat ystop = glyph.bounds.height + ypos;
+		GLfloat xstop = glyph.bounds.width + xpos;
 
-// 	// Activate corresponding render state
-// 	glUniformMatrix4fv(glGetUniformLocation(gui_shader.getOpenGLID(), "model"), 1, GL_FALSE, glm::value_ptr(parent_matrix * matrix));
-// 	glUniform4f(gui_shader_uniform_color, color.x, color.y, color.z, color.w);
-// 	//glUniform2f(glGetUniformLocation(getGuiManager().textureShader.getOpenGLID(), "origin"), size*origin.x, origin.y);
-// 	glBindVertexArray(VAO);
+		glm::vec4 textureRect;
+	
+		/*left	*/	textureRect.x = (float)glyph.textureRect.left / texture.getSize().x;
+		/*width	*/	textureRect.z = (float)glyph.textureRect.width / texture.getSize().x;
+		/*top	*/	textureRect.y = (float)glyph.textureRect.top / texture.getSize().y;
+		/*height*/	textureRect.w = (float)glyph.textureRect.height / texture.getSize().y;
 
-// 	GLfloat offset = 0;
-// 	GLfloat baseline = 1 - (font->getUnderlinePosition(characterSize) + font->getUnderlineThickness(characterSize));
+		glUniform4fv(glGetUniformLocation(shader.getOpenGLID(), "textureRect"),1,glm::value_ptr(textureRect));
+ 
+		glm::mat4 letterMatrix = glm::mat4(1.f);
+		letterMatrix = glm::translate	(letterMatrix,glm::vec3(xpos , ypos+height,0.f));
+		letterMatrix = glm::scale		(letterMatrix,glm::vec3(width, -height ,1.f));
+		
+		Mesh::rectangle().draw(shader,inMatrix*matrix*letterMatrix);
+		
+		offset += glyph.advance;
+	}
 
-// 	GLfloat mousepos = Input::mousepos.x;
+	GuiComponent::draw(shader,camera,inMatrix*matrix);
+}
 
-// 	float one = font->getLineSpacing(characterSize);
-// 	float debugScale = 1.f / one;
-
-// 	float cursorx = guiAspectMouse(scene, parent_matrix, attachMatrix).x/sizey(parent_sizey)/debugScale;
-
-// 	for (size_t i = 0; i < text.getSize(); i++)
-// 	{
-// 		auto glyph = font->getGlyph(text[i], characterSize, 0, 0);
-// 		if (text[i] == '\t')
-// 		{
-// 			glyph = font->getGlyph(' ', characterSize, 0, 0);
-
-// 			//if (origin.x == 0)
-// 			if (false)
-// 			{
-// 				int g = (offset) / (glyph.advance * 4) + 1;
-// 				glyph.advance = glyph.advance * 4 * g - (offset);
-// 			}
-// 			else
-// 				glyph.advance *= 4;
-// 		}
-// 		if (i)
-// 			offset += font->getKerning(text[i - 1], text[i], characterSize);
-
-// 		GLfloat ypos = glyph.bounds.top + baseline + one;
-// 		GLfloat xpos = glyph.bounds.left + offset;
-// 		GLfloat ystop = glyph.bounds.height + ypos;
-// 		GLfloat xstop = glyph.bounds.width + xpos;
-
-// 		sf::FloatRect textureRect;
-
-// 		textureRect.left = (float)glyph.textureRect.left / texture.sizex;
-// 		textureRect.width = (float)glyph.textureRect.width / texture.sizex;
-// 		textureRect.top = (float)glyph.textureRect.top / texture.sizey;
-// 		textureRect.height = (float)glyph.textureRect.height / texture.sizey;
-
-// 		GLfloat vertices[30] = {
-// 			xpos * debugScale, ypos * debugScale, 0, textureRect.left, textureRect.top,
-// 			xpos * debugScale, ystop * debugScale, 0, textureRect.left, textureRect.top + textureRect.height,
-// 			xstop * debugScale, ystop * debugScale, 0, textureRect.left + textureRect.width, textureRect.top + textureRect.height,
-
-// 			xpos * debugScale, ypos * debugScale, 0, textureRect.left, textureRect.top,
-// 			xstop * debugScale, ystop * debugScale, 0, textureRect.left + textureRect.width, textureRect.top + textureRect.height,
-// 			xstop * debugScale, ypos * debugScale, 0, textureRect.left + textureRect.width, textureRect.top};
-
-// 		if(cursorx>offset&&cursorx<(offset+glyph.advance)){
-// 			cursorx = offset + ((cursorx-offset)/glyph.advance<0.5?0:glyph.advance);
-// 		}
-// 		offset += glyph.advance;
-
-// 		// Update content of VBO memory
-// 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-// 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-// 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-// 		// Render quad
-// 		glDrawArrays(GL_TRIANGLES, 0, 6);
-// 	}
-// 	sizex.setValue(offset * debugScale * sizey(parent_sizey), false);
-// 	glBindTexture(GL_TEXTURE_2D, 0);
-
-// 	//cursor
-// 	whiteTexture().use(0, gui_shader, "texture1");
-// 	 GLfloat vertices[10] = {
-// 	 		cursorx*debugScale,  	0,	0,		0, 1 ,
-// 	 		cursorx*debugScale,	1,	0,		1, 1 ,
-// 		};
-// 	// Update content of VBO memory
-// 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-// 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-// 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-// 	// Render quad
-// 	glDrawArrays(GL_LINES, 0, 2);
-// 	glBindTexture(GL_TEXTURE_2D, 0);
-// 	glBindVertexArray(0);
-
-// 	Gui::draw(scene, parent_sizex, parent_sizey, parent_matrix);
-// }
-// void Text::setUtf8(std::string data)
-// {
-// 	text = sf::String::fromUtf8(data.begin(), data.end());
-// }

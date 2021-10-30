@@ -7,6 +7,7 @@
 
 #include "OpenGL/Recorder.h"
 #include "Gui/Sprite.h"
+#include "Gui/Text.h"
 #include "Gui/Scene.h"
 /*
 	A GuiHandler is used to handle the Gui.
@@ -25,6 +26,7 @@ class GuiHandler
 
 	//test test stuff
 	Sprite sprite;
+	Text text,text2;
 
 public:
 	GuiHandler();

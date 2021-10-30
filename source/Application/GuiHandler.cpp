@@ -29,6 +29,8 @@ void GuiHandler::init(Application* app){
 	mutex.unlock();
 
 	sprite.setTexture(TextureManager::loadFromFile("res/texture/logo_gide.png"));
+	text.setUtf8(	u8"w		ok");
+	text2.setUtf8(	u8"wass	hmm");
 }
 bool once = false;
 void GuiHandler::draw(Application* app){
@@ -39,7 +41,11 @@ void GuiHandler::draw(Application* app){
 	app->record();
 	shader.use();
 	camera.use(shader);
-	sprite.draw(shader,camera);
+	//sprite.draw(shader,camera);
+	text.draw(shader,camera);
+	glm::mat4 mat(1.f);
+	mat = glm::translate(mat,glm::vec3(0,50,0));
+	text2.draw(shader,camera,mat);
 
 	mutex.unlock();
 	return;

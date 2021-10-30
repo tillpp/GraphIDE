@@ -4,6 +4,9 @@
 #include <SFML\Graphics.hpp>
 #include "Shader.h"
 #include <mutex>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 struct TextureSettings
@@ -31,6 +34,8 @@ public:
 	void LoadFromTexture(sf::Texture inTexture, TextureSettings inSettings = TextureSettings());
 	virtual void use(short inActivate, Shader& inShaderProgram, std::string inTextureNameInShader);
 	bool isEmpty();
+
+	glm::vec2 getSize();
 	
 	//static functions
 	static Texture& whiteTexture();

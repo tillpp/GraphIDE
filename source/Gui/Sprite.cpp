@@ -17,7 +17,9 @@ void Sprite::draw(Shader &shader, Camera &camera, glm::mat4 inMatrix)
 	shader.use();
 
 	//uniforms
-	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "color"),1,1,1,1);
+	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "color"),color.r,color.g,color.b,color.a);
+	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "textureRect"),0,0,1,1);
+	
 	camera.use(shader);
 	if(texture)
 		texture->use(0, shader, "texture1");

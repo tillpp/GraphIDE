@@ -124,3 +124,8 @@ Texture & Texture::whiteTexture()
 	}
 	return theWhiteTexture;
 }
+glm::vec2 Texture::getSize(){
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+
+	return glm::vec2(sizex,sizey);
+}

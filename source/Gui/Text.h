@@ -1,32 +1,26 @@
 #pragma once
 
-// #include "GuiComponent.h"
-// #include "OpenGL/Texture.h"
+#include "GuiComponent.h"
+#include "OpenGL/Texture.h"
+#include <SFML/Graphics.hpp>
 
-// class Text:public GuiComponent
-// {
-// 	static sf::Font standartFont;
+class Text:public GuiComponent
+{
+	//data
+	Texture texture;
+	sf::Font* font;
+	glm::vec4 color = glm::vec4(1,1,1,1);
 
-// 	sf::String lastText; 
-	
-	
-// 	Texture texture;
-// public:
-// 	sf::Font* font;
-// 	sf::String text = "hello world";
+	//temporary data
+	sf::String lastText,text;
+public:
+	Text();
+	~Text();
 
-// 	void setUtf8(std::string);
 
-// 	Text(/* args */);
-// 	~Text();
-// 	void updateMatrix(float parent_sizex,float parent_sizey)override;
-// 	void draw(
-// 		Scene& scene,
-// 		float parent_sizex,
-// 		float parent_sizey,
-// 		glm::mat4 parent_matrix = glm::mat4(1.f));
+ 	void setUtf8(std::string);
+	virtual void draw(Shader& shader,Camera& camera,glm::mat4 inMatrix = glm::mat4(1.f)) override;
 
-// 	static GLuint VAO, VBO;
-// 	static void init();
-
-// };
+public:
+	static sf::Font standartFont;
+};
