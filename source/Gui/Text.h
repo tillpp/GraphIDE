@@ -18,6 +18,9 @@ public:
 	~Text();
 
 
+ 	void addString(sf::String);
+ 	void addUtf8(std::string);
+ 	void setString(sf::String);
  	void setUtf8(std::string);
 	virtual void draw(Shader& shader,Camera& camera,glm::mat4 inMatrix = glm::mat4(1.f)) override;
 

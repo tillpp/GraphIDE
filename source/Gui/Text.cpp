@@ -10,7 +10,7 @@ Text::Text()
 {
 	std::lock_guard<std::recursive_mutex> lock(standartFontMutex);
 	if(!standartFontIsInitialzed){
-		standartFont.loadFromFile("res/font/arial.ttf");	
+		standartFont.loadFromFile("res/font/SourceCodePro-Regular.ttf");	
 		standartFontIsInitialzed = true;
 	}
 
@@ -21,10 +21,25 @@ Text::Text()
 Text::~Text()
 {
 }
+void Text::addUtf8(std::string data)
+{
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	text += sf::String::fromUtf8(data.begin(), data.end());
+}
+void Text::addString(sf::String data)
+{
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	text += data;
+}
 void Text::setUtf8(std::string data)
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	text = sf::String::fromUtf8(data.begin(), data.end());
+}
+void Text::setString(sf::String data)
+{
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	text = data;
 }
 
 void Text::draw(Shader& shader,Camera& camera,glm::mat4 inMatrix){

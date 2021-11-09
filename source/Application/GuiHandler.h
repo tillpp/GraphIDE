@@ -22,7 +22,6 @@ class GuiHandler
 	Shader shader;
 	Mesh mesh;
 	Scene camera = Scene(glm::vec2(1280,720));;
-	Recorder recorder;
 
 	//test test stuff
 	Sprite sprite;

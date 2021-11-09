@@ -11,7 +11,6 @@ GuiHandler::~GuiHandler()
 }
 void GuiHandler::init(Application* app){
 	mutex.lock();
-	recorder.create(1280,720);
 
 	shader.create();
 	shader.addVertexShaderFromFile("res/shader/gui.ver");
@@ -29,8 +28,8 @@ void GuiHandler::init(Application* app){
 	mutex.unlock();
 
 	sprite.setTexture(TextureManager::loadFromFile("res/texture/logo_gide.png"));
-	text.setUtf8(	u8"w		ok");
-	text2.setUtf8(	u8"wass	hmm");
+	text.setUtf8(	  u8"w		ok");
+	text2.setUtf8(	  u8"wass	hmm");
 }
 bool once = false;
 void GuiHandler::draw(Application* app){
@@ -42,35 +41,11 @@ void GuiHandler::draw(Application* app){
 	shader.use();
 	camera.use(shader);
 	//sprite.draw(shader,camera);
+	text.addString(app->getText());
 	text.draw(shader,camera);
 	glm::mat4 mat(1.f);
 	mat = glm::translate(mat,glm::vec3(0,50,0));
 	text2.draw(shader,camera,mat);
-
-	mutex.unlock();
-	return;
-
-	mutex.lock();
-
-	if(!once)
-		recorder.record();
-	else app->record();
-	shader.use();
-	
-	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "color"),0,1,0,1);
-	
-	camera.use(shader);
-	if(!once)
-		Texture::whiteTexture().use(0,shader,"texture1");
-	else 
-		recorder.use(0,shader,"texture1");
-
-	mesh.draw(shader);
-	
-	if(!once){
-		recorder.save();
-		once = true;
-	}
 
 	mutex.unlock();
 }
