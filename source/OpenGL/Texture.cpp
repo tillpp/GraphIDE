@@ -1,7 +1,7 @@
 #include "Texture.h"
-#include <GL\glew.h>
-#include <SFML\OpenGL.hpp>
-#include <SFML\Graphics.hpp>
+#include <GL/glew.h>
+#include <SFML/OpenGL.hpp>
+#include <SFML/Graphics.hpp>
 
 Texture::Texture(/* args */)
 {

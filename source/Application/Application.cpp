@@ -10,7 +10,7 @@ Application::Application(std::string title,size_t width,size_t height)
 	for (size_t i = 0; i < sf::Mouse::ButtonCount; i++)
 		mouseKeyData[i]=0; 
 	
-	thread = std::thread(Application::run, this,title,width,height);
+	thread = std::thread(&Application::run, this,title,width,height);
 	
 	//loop until the initalization is finished.
 	mutex.lock();

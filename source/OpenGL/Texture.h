@@ -1,7 +1,7 @@
 #pragma once
-#include <GL\glew.h>
-#include <SFML\OpenGL.hpp>
-#include <SFML\Graphics.hpp>
+#include <GL/glew.h>
+#include <SFML/OpenGL.hpp>
+#include <SFML/Graphics.hpp>
 #include "Shader.h"
 #include <mutex>
 #include <glm/glm.hpp>
