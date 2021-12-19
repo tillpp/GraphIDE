@@ -7,9 +7,6 @@ Font::Font(std::string path, size_t characterSize)
 	this->characterSize = characterSize;
 }
 
-Font::~Font()
-{
-}
 Texture &Font::getTexture()
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
@@ -56,4 +53,6 @@ void Font::use(Shader &shader)
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	texture.use(0, shader, "texture1");
+}
+Font::~Font(){
 }

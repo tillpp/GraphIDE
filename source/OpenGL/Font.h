@@ -16,13 +16,12 @@ private:
 	std::set<unsigned int> glyphs; 
 public:
 	Font(std::string path,size_t characterSize = 32);
-	~Font();
 	Texture &getTexture();
 	const sf::Glyph& getGlyph(unsigned int c);
 	glm::vec4 getRelativTextureRectGlyph(const sf::Glyph&);
 
 	//get Informations
-	GLfloat getBaseline();//from top to the baseline
+	GLfloat getBaseline();
 	GLfloat getLineSpacing();
 	GLfloat getKerning(sf::String& string,unsigned int position);
 	
@@ -32,5 +31,6 @@ public:
 
 	//remove Copy constructor
 	Font(const Font&) = delete;
+	~Font();
 };
 
