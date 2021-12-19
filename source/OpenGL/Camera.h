@@ -10,10 +10,12 @@
 
 class Camera
 {
-protected:
+private:
 	glm::mat4 viewProjection = glm::mat4(1.f);
+	glm::mat4 inverseViewProjection = glm::mat4(1.f);
 public:
+	void setViewProjection(glm::mat4 viewProjection = glm::mat4(1.0f));
 	void use(Shader& shader);
-	 
+	glm::mat4 getInverseViewProjection();
 };
 

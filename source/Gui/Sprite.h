@@ -8,7 +8,12 @@ class Sprite
 {
 	glm::vec4 color = glm::vec4(1,1,1,1);
 	Texture* texture = nullptr;
+
+	friend GuiEqTexturePercent;
+	friend GuiEqTextureHoldRatio;
 public:
+	GuiAttribute texBoundXpos,texBoundYpos,texBoundWidth,texBoundHeight,texWidth,texHeight;
+
 	Sprite();
 	~Sprite();
 
@@ -18,6 +23,8 @@ public:
 	void setTexture(Texture* inColor);
 	Texture* getTexture();	
 
-	virtual void draw(Shader& shader,Camera& camera,glm::mat4 matrix = glm::mat4(1.f));
+	virtual void draw(Shader& shader,Camera& camera,double x,double y);
+
+	virtual std::string getType()override;
 };
 

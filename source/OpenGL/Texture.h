@@ -28,6 +28,7 @@ class Texture
 	static Texture theWhiteTexture; 
 public:
 	Texture();
+	Texture(Texture&)=delete;
 	~Texture();
 
 	void LoadFromFile(sf::String inPath, TextureSettings inSettings = TextureSettings());
@@ -36,6 +37,7 @@ public:
 	bool isEmpty();
 
 	glm::vec2 getSize();
+	double getRatio();
 	
 	//static functions
 	static Texture& whiteTexture();

@@ -10,7 +10,7 @@ Texture::Texture(/* args */)
 Texture::~Texture()
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
-	if (textureID!=-1)
+	if (textureID!=(GLuint)-1)
 		glDeleteTextures(1,&textureID);
 	textureID = -1;
 }
@@ -80,6 +80,7 @@ void Texture::LoadFromTexture(
 	// Set our texture parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	
 	// Set texture filtering
 	if (inSettings.linearInterpolation) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -128,4 +129,7 @@ glm::vec2 Texture::getSize(){
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 
 	return glm::vec2(sizex,sizey);
+}
+double Texture::getRatio(){
+	return (double)sizex/sizey;
 }
