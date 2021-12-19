@@ -50,7 +50,7 @@ public:
 	void record();
 
 	glm::vec2 getSize();
-	glm::vec2 getNormalizedMousePosition();
+	glm::vec4 getGLNormalizedMousePosition();
 
 	sf::String getText();
 	KeyState getKey(sf::Mouse::Button);

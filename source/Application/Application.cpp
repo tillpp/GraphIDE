@@ -1,6 +1,7 @@
 #include "Application.h"
 #include <iostream>
 #include "Util/Log.h"
+#include "OpenGL/FontManager.h"
 
 Application::Application(std::string title,size_t width,size_t height)
 {
@@ -38,9 +39,9 @@ void Application::run(std::string title,size_t width,size_t height)
 	settings.minorVersion 		= 0;
 
 	window.create(sf::VideoMode(width,height), title , sf::Style::Default, settings);
-	window.setVerticalSyncEnabled(true);
+	//window.setVerticalSyncEnabled(true);
 	window.setActive(true);
-	window.setFramerateLimit(30);
+	//window.setFramerateLimit(30);
 
 	auto err = glewInit();
 	if (err != GLEW_OK)
@@ -80,11 +81,13 @@ void Application::run(std::string title,size_t width,size_t height)
 		}
 		window.display();
 	}
+	exit(0);
 	mutex.unlock();
 }
 void Application::close(){
 	mutex.lock();
 	window.close();
+	exit(0);
 	mutex.unlock();
 }
 void Application::registerFeature(ApplicationFeature* feature){
@@ -110,11 +113,11 @@ glm::vec2 Application::getSize(){
 	auto size = window.getSize();
 	return glm::vec2(size.x, size.y);
 }
-glm::vec2 Application::getNormalizedMousePosition(){
+glm::vec4 Application::getGLNormalizedMousePosition(){
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	auto mousepos = sf::Mouse::getPosition(window);
 	auto size = window.getSize();
-	return glm::vec2((float)mousepos.x/size.x,(float)mousepos.y/size.y);
+	return glm::vec4(2.f*(float)mousepos.x/size.x-1.f,-2.f*(float)mousepos.y/size.y+1.f,0,1);
 }
 sf::String Application::getText(){
 	std::lock_guard<std::recursive_mutex> lock(mutex);
