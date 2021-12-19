@@ -41,9 +41,9 @@ void Sprite::draw(Shader &shader, Camera &camera, double x, double y)
 	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "color"), color.r, color.g, color.b, color.a);
 	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "textureRect"),
 		texBoundXpos/texWidth,
-		texBoundYpos/texHeight,
-		(texBoundXpos+texBoundWidth)/texWidth,
-		(texBoundYpos+texBoundHeight)/texHeight);
+		(texBoundYpos-texBoundHeight)/texHeight,
+		(texBoundWidth)/texWidth,
+		(texBoundHeight)/texHeight);
 
 	camera.use(shader);
 	if (texture)

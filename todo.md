@@ -1,7 +1,6 @@
 
 #Texture
 -> h,v flip
-Bug fix rect y achse
 
 #Resize Container
 
