@@ -9,6 +9,8 @@ GuiHandler::GuiHandler()
 GuiHandler::~GuiHandler()
 {
 }
+
+static time_t start;
 void GuiHandler::init(Application* app){
 	mutex.lock();
 
@@ -28,27 +30,71 @@ void GuiHandler::init(Application* app){
 	mutex.unlock();
 
 	sprite.setTexture(TextureManager::loadFromFile("res/texture/logo_gide.png"));
-	text.setUtf8(	  u8"w		ok");
-	text2.setUtf8(	  u8"wass	hmm");
+	sprite.width.setEquation(GuiEqPixel(2000));
+	sprite.height.setEquation(GuiEqRatio(2));
+	sprite.texBoundHeight.setEquation(GuiEqSize(100));
+	sprite.texBoundWidth.setEquation(GuiEqSize(100));
+	
+	sprite2.width.setEquation(GuiEqPixel(50));
+	sprite2.height.setEquation(GuiEqPixel(50));
+	sprite2.setColor(glm::vec4(1,0,0,1));
+
+	sprite2.xpos.setEquation(GuiEqSub(GuiEqPercent(100),GuiEqPixel(50)));
+	sprite2.ypos.setEquation(GuiEqPixel(0));
+
+	scene.add(&sprite);
+	sprite.add(&sprite2);
+
+	time(&start);
+	//text.setUtf8(	  u8"w		ok");
+	//text2.setUtf8(	  u8"wass	hmm");
 }
-bool once = false;
 void GuiHandler::draw(Application* app){
 	mutex.lock();
 
-    camera.setSize(app->getSize());
+    scene.setSize(app->getSize());
 
 	app->record();
-	shader.use();
-	camera.use(shader);
-	//sprite.draw(shader,camera);
-	text.addString(app->getText());
-	text.draw(shader,camera);
-	glm::mat4 mat(1.f);
-	mat = glm::translate(mat,glm::vec3(0,50,0));
-	text2.draw(shader,camera,mat);
-
+	scene.draw(shader);
+	
+	time_t t;
+	time(&t);
+	//   sprite.width.adjustEquation([t](GuiEquation* eq)->void{
+	//   	((GuiEqPixel*)eq)->setValue((t-start)*10);
+	//   });
+	
+	// text.addString(app->getText());
+	// text.draw(shader,camera);
+	// glm::mat4 mat(1.f);
+	// mat = glm::translate(mat,glm::vec3(0,50,0));
+	// text2.draw(shader,camera,mat);
+	// mat = glm::translate(mat,glm::vec3(0,50,0));
+	
+	//sprite.draw(shader,camera,0,100);
 	mutex.unlock();
 }
 void GuiHandler::update(Application* app){
+	mutex.lock();
+	glm::vec4 screenMousePosition = scene.getInverseViewProjection()*app->getGLNormalizedMousePosition();
+	
+	// glm::mat4 mat(1.f);
+	// auto pit = text.getPositionInTextStandartScaling(screenMousePosition,mat);
+	// if(app->getKey(sf::Mouse::Left)==KeyState::clicked){
+	// 	text.startSelectionBox(pit);
+	// }
+	// if(app->getKey(sf::Mouse::Left)==KeyState::pressed){
+	// 	text.moveSelectionBox(pit);
+	// }
+	
+	// mat = glm::translate(mat,glm::vec3(0,50,0));	
+	// pit = text2.getPositionInTextStandartScaling(screenMousePosition,mat);
+	// if(app->getKey(sf::Mouse::Left)==KeyState::clicked){
+	// 	text2.startSelectionBox(pit);
+	// }
+	// if(app->getKey(sf::Mouse::Left)==KeyState::pressed){
+	// 	text2.moveSelectionBox(pit);
+	// }
+	//std::cout << "Positon:\t"<< text2.nearestCharacter(pit)<<std::endl;
 
+	mutex.unlock();
 }

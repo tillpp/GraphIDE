@@ -21,11 +21,11 @@ class GuiHandler
 	//test stuff
 	Shader shader;
 	Mesh mesh;
-	Scene camera = Scene(glm::vec2(1280,720));;
+	Scene scene = Scene(glm::vec2(1280,720));
 
 	//test test stuff
-	Sprite sprite;
-	Text text,text2;
+	Sprite sprite,sprite2;
+	//Text text,text2;
 
 public:
 	GuiHandler();
