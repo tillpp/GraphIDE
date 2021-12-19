@@ -39,11 +39,12 @@ void Sprite::draw(Shader &shader, Camera &camera, double x, double y)
 
 	//uniforms
 	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "color"), color.r, color.g, color.b, color.a);
+
 	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "textureRect"),
-		texBoundXpos/texWidth,
-		(texBoundYpos-texBoundHeight)/texHeight,
-		(texBoundWidth)/texWidth,
-		(texBoundHeight)/texHeight);
+				(texBoundXpos + (flipX ? 1 : 0)*texBoundWidth)/ texWidth,
+				(texBoundYpos - (flipY ? 0 : 1)*texBoundHeight) / texHeight,
+				((flipX ? -1 : 1) * texBoundWidth) / texWidth,
+				((flipY ? -1 : 1) * texBoundHeight) / texHeight);
 
 	camera.use(shader);
 	if (texture)
@@ -81,5 +82,26 @@ Texture *Sprite::getTexture()
 
 std::string Sprite::getType()
 {
+	std::lock_guard<std::recursive_mutex> lock(mutex);
 	return "Sprite";
+}
+void Sprite::setFlipX(bool x)
+{
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	flipX = x;
+}
+bool Sprite::getFlipX()
+{
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	return flipX;
+}
+void Sprite::setFlipY(bool x)
+{
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	flipY = x;
+}
+bool Sprite::getFlipY()
+{
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	return flipY;
 }

@@ -11,11 +11,20 @@ class Sprite
 
 	friend GuiEqTexturePercent;
 	friend GuiEqTextureHoldRatio;
+
+	bool flipX = false,flipY = false; 
 public:
 	GuiAttribute texBoundXpos,texBoundYpos,texBoundWidth,texBoundHeight,texWidth,texHeight;
 
 	Sprite();
 	~Sprite();
+
+	void setFlipX(bool x);
+	bool getFlipX();
+	
+	void setFlipY(bool x);
+	bool getFlipY();
+	
 
 	void setColor(glm::vec4 inColor);
 	glm::vec4 getColor();	

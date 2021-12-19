@@ -14,7 +14,7 @@ GuiEqTextureHoldRatio::~GuiEqTextureHoldRatio()
 double GuiEqTextureHoldRatio::evaluate(GuiComponent& guiComponent,bool xAxis){
 	if(guiComponent.getType()=="Sprite"){
 		auto sprite = ((Sprite*)(&guiComponent));
-		auto ratio = sprite->width/sprite->height;
+		auto ratio = sprite->texWidth/sprite->texHeight;
 		return xAxis?guiComponent.height*ratio:guiComponent.width/ratio;
 	}
 
