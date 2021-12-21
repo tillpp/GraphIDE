@@ -29,21 +29,27 @@ void GuiHandler::init(Application* app){
 	mesh.setSettingRead(1,2,false,5,3);
 	mutex.unlock();
 
-	sprite.setTexture(TextureManager::loadFromFile("res/texture/logo_gide.png"));
-	sprite.width.setEquation(GuiEqPixel(2000));
-	sprite.height.setEquation(GuiEqRatio(2));
-	sprite.texBoundHeight.setEquation(GuiEqSize(100));
-	sprite.texBoundWidth.setEquation(GuiEqSize(100));
+	sprite.setTexture(TextureManager::loadFromFile("res/texture/background.png"));
+	sprite.width.setEquation(GuiEqPercent(100));
+	sprite.height.setEquation(GuiEqPercent(50));
+	sprite.texBoundHeight.setEquation(GuiEqSize(200));
+	sprite.texBoundWidth.setEquation(GuiEqSize(200));
+	sprite.setFlipY(true);
+	sprite.setFlipX(true);
 	
-	sprite2.width.setEquation(GuiEqPixel(50));
-	sprite2.height.setEquation(GuiEqPixel(50));
-	sprite2.setColor(glm::vec4(1,0,0,1));
+	sprite2 = new Sprite;
+	sprite2->width.setEquation(GuiEqPixel(50));
+	sprite2->height.setEquation(GuiEqPixel(50));
+	sprite2->setColor(glm::vec4(1,0,0,1));
 
-	sprite2.xpos.setEquation(GuiEqSub(GuiEqPercent(100),GuiEqPixel(50)));
-	sprite2.ypos.setEquation(GuiEqPixel(0));
+	sprite2->xpos.setEquation(GuiEqSub(GuiEqPercent(100),GuiEqPixel(50)));
+	sprite2->ypos.setEquation(GuiEqPixel(0));
 
 	scene.add(&sprite);
-	sprite.add(&sprite2);
+	sprite.add(sprite2);
+
+
+	sprite.addFeature<GuiFeatureResize>();
 
 	time(&start);
 	//text.setUtf8(	  u8"w		ok");
@@ -59,9 +65,7 @@ void GuiHandler::draw(Application* app){
 	
 	time_t t;
 	time(&t);
-	//   sprite.width.adjustEquation([t](GuiEquation* eq)->void{
-	//   	((GuiEqPixel*)eq)->setValue((t-start)*10);
-	//   });
+   	sprite.width.overrideCachedValue(500);
 	
 	// text.addString(app->getText());
 	// text.draw(shader,camera);
@@ -75,7 +79,11 @@ void GuiHandler::draw(Application* app){
 }
 void GuiHandler::update(Application* app){
 	mutex.lock();
-	glm::vec4 screenMousePosition = scene.getInverseViewProjection()*app->getGLNormalizedMousePosition();
+	//glm::vec4 screenMousePosition = scene.getInverseViewProjection()*app->getGLNormalizedMousePosition();
+	
+	
+	scene.update();
+	
 	
 	// glm::mat4 mat(1.f);
 	// auto pit = text.getPositionInTextStandartScaling(screenMousePosition,mat);

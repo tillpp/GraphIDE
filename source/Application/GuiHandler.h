@@ -24,7 +24,7 @@ class GuiHandler
 	Scene scene = Scene(glm::vec2(1280,720));
 
 	//test test stuff
-	Sprite sprite,sprite2;
+	Sprite sprite,*sprite2;
 	//Text text,text2;
 
 public:

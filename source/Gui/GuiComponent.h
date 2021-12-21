@@ -17,27 +17,34 @@
 #include "Attribute/GuiEqTextureHoldRatio.h"
 #include "Attribute/GuiEqSize.h"
 
+#include "Feature/GuiFeature.h"
+#include "Feature/GuiFeatureResize.h"
+#include "Event/GuiEvent.h"
+
+#include "Util/BoolTail.h"
+
 class GuiComponent
 {
 protected:
 	friend GuiAttribute;
+	friend GuiFeature;
 	//thread
 	std::recursive_mutex mutex;
 	//data
 	GuiComponent* 				parent = nullptr;
 	std::vector<GuiComponent*> 	children;
-
+	std::vector<GuiFeature*> 	features;
 public:
 	GuiAttribute width,height;
 	GuiAttribute xpos, ypos;
-	
+
 	GuiComponent();
 	GuiComponent(GuiComponent&)=delete;
 	
 	~GuiComponent();
 
-	virtual bool contain(double mousePositionX,double mousePositionY,double x = 0,double y = 0);
-	virtual void draw(Shader& shader,Camera& camera,				 double x = 0,double y = 0);
+	virtual bool contain(const double& mousePositionX,const double& mousePositionY,	const double& parentx = 0,const double& parenty = 0);
+	virtual void draw(Shader& shader,Camera& camera,				 				const double& parentx = 0,const double& parenty = 0);
 
 	GuiComponent* getParent();
 	const std::vector<GuiComponent*>& getChildren();
@@ -50,5 +57,17 @@ public:
 	GuiComponent* getPrevious();
 
 	virtual std::string getType();
+	
+	template<class Feature,class... Args>
+	void addFeature(Args... args){
+		auto feature = new Feature(this,args...);
+		features.push_back(feature); 
+	}
+
+	void removeFeature(GuiFeature*);
+	void triggerEvent(const GuiEvent& event);
+public: //EVENTS
+	BoolTail hover;
+	void updateHover(const double& mousex,const double& mousey,const double& parentx = 0,const double& parenty = 0);
 };
 

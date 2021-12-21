@@ -1,11 +1,11 @@
+TODO:Change keys in Application with BoolTails
 
-#Texture
--> h,v flip
-
-#Resize Container
+direkt/indirekt hover
 
 #componentModules
+    #Resize Container
     #animation animation,trigger
+    #move container
 
 #Text
 
@@ -14,7 +14,18 @@
 
 #colorpicker
 #frame
-#move container
 #window
 #sliders
 #diagrans
+	circle chart (halb circle etc.)
+	bar chart
+    line chart
+
+Button
+Textbox
+
+	windowtab
+	showmore
+
+
+	Text nach left scrollen lassen wenn box außerhalb von boundrie

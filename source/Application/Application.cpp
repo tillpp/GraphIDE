@@ -3,8 +3,17 @@
 #include "Util/Log.h"
 #include "OpenGL/FontManager.h"
 
+Application* theApplication = nullptr;
+Application& app(){
+	if(!theApplication)
+		Log::error("Application not initialized");
+	return *theApplication;
+}
 Application::Application(std::string title,size_t width,size_t height)
 {
+	if(!theApplication)
+		theApplication = this;
+
 	//initializing the inputvariables
 	for (size_t i = 0; i < sf::Keyboard::KeyCount; i++)
 		keyboardData[i]=0; 
@@ -185,4 +194,8 @@ void Application::updateInput()
 			Log::info("Mouse button "+std::to_string(i)+" release");
 		}
 	}
+}
+
+void Application::setCursor(const sf::Cursor& c){
+	window.setMouseCursor(c);
 }

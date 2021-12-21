@@ -21,7 +21,7 @@ public:
 
 	void setFlipX(bool x);
 	bool getFlipX();
-	
+
 	void setFlipY(bool x);
 	bool getFlipY();
 	
@@ -32,8 +32,11 @@ public:
 	void setTexture(Texture* inColor);
 	Texture* getTexture();	
 
-	virtual void draw(Shader& shader,Camera& camera,double x,double y);
+	virtual void draw(Shader& shader,Camera& camera,const double& x,const double& y)override;
+	virtual std::vector<GuiAttribute*> getGuiAttributes()override;
 
 	virtual std::string getType()override;
+
+	
 };
 

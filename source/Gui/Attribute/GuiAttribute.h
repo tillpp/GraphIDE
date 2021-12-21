@@ -34,10 +34,8 @@ public:
 
 	void updateValue();
 	//this is a [SLOW FUNCTION] 
-	void setEquation(GuiEquation&& eq);
- 
-	void adjustEquation(std::function<void(GuiEquation*)> fun);
-	
+	void setEquation(const GuiEquation& eq);
+	void overrideCachedValue(double);
 
 	//Use this before moving the GuiComponent
 	void deconnect();
@@ -54,6 +52,8 @@ protected:
 		remove all dependers from the dependencies.
 	*/
 	void removeAllDependerFromDependency();
-	
-	
+	/*
+		propage change of cachedValue to all dependers 
+	*/
+	void propagateChange();
 };

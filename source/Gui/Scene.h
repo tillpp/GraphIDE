@@ -14,4 +14,6 @@ public:
 
 	void add(GuiComponent* guiComponent);
 	void draw(Shader&);
+
+	void update();
 };

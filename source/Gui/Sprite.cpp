@@ -18,21 +18,15 @@ Sprite::Sprite(/* args */) : texBoundXpos(this, true),
 Sprite::~Sprite()
 {
 }
-void Sprite::draw(Shader &shader, Camera &camera, double x, double y)
+void Sprite::draw(Shader &shader, Camera &camera, const double& x, const double& y)
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 
 	//update textureWidth if nessary
 	if (texture)
 	{
-		int textureWidth = (int)texture->getSize().x;
-		int textureHeight = (int)texture->getSize().y;
-		if (textureWidth != (int)texWidth)
-			texWidth.adjustEquation([&](GuiEquation *ge) -> void
-									{ ((GuiEqPixel *)ge)->setValue(textureWidth); });
-		if (textureHeight != (int)texHeight)
-			texHeight.adjustEquation([&](GuiEquation *ge) -> void
-									 { ((GuiEqPixel *)ge)->setValue(textureHeight); });
+		texWidth.overrideCachedValue(texture->getSize().x); 
+		texHeight.overrideCachedValue(texture->getSize().y);
 	}
 
 	shader.use();
@@ -104,4 +98,14 @@ bool Sprite::getFlipY()
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	return flipY;
+}
+std::vector<GuiAttribute*> Sprite::getGuiAttributes(){
+	auto rv = GuiComponent::getGuiAttributes();
+	rv.push_back(&texBoundHeight);
+	rv.push_back(&texBoundWidth);
+	rv.push_back(&texBoundXpos);
+	rv.push_back(&texBoundYpos);
+	rv.push_back(&texHeight);
+	rv.push_back(&texWidth);
+	return rv;
 }

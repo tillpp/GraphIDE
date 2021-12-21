@@ -55,4 +55,7 @@ public:
 	sf::String getText();
 	KeyState getKey(sf::Mouse::Button);
 	KeyState getKey(sf::Keyboard::Key);
+
+	void setCursor(const sf::Cursor&);
 };
+Application& app();
