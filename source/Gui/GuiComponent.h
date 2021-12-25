@@ -20,6 +20,7 @@ class Scene;
 
 #include "Feature/GuiFeature.h"
 #include "Feature/GuiFeatureResize.h"
+#include "Feature/GuiFeatureMove.h"
 #include "Event/GuiEvent.h"
 
 #include "Util/BoolTail.h"

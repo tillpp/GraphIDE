@@ -38,7 +38,7 @@ public:
 	virtual void setResizableRight(bool);
 	virtual void setResizableBottom(bool);
 protected:
-	virtual void handleEvent(const GuiEvent& event)override;
+	virtual bool handleEvent(const GuiEvent& event)override;
 	virtual std::vector<GuiAttribute*> getGuiAttribute()override;
 
 private:

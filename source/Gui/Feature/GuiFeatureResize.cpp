@@ -12,8 +12,8 @@ GuiFeatureResize::GuiFeatureResize(GuiComponent *g)
 	  maxWidth(g, true),
 	  maxHeight(g, false)
 {
-	maxWidth.setEquation(GuiEqPercent(std::numeric_limits<double>::max()));
-	maxHeight.setEquation(GuiEqPercent(std::numeric_limits<double>::max()));
+	maxWidth.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
+	maxHeight.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
 }
 GuiFeatureResize::~GuiFeatureResize()
 {
@@ -27,7 +27,7 @@ std::string GuiFeatureResize::getType()
 
 
 
-void GuiFeatureResize::handleEvent(const GuiEvent &event)
+bool GuiFeatureResize::handleEvent(const GuiEvent &event)
 {
 	if (event.getType() == GuiEventType::HOVERING )
 	{
@@ -41,6 +41,7 @@ void GuiFeatureResize::handleEvent(const GuiEvent &event)
 		onBorderY.update(sizeInY && e->direct);
 
 		updateCursor();
+		return onBorderX||onBorderY;
 	}
 	else if (event.getType() == GuiEventType::UNHOVER)
 	{
@@ -63,9 +64,9 @@ void GuiFeatureResize::handleEvent(const GuiEvent &event)
 			resizingX = HIGH;
 		if (resizableBottom &&e->mouseyInGui > component->height - borderSize)
 			resizingY = HIGH;
-
-		isResizing = true;		
+	
 		if(resizingX!=NONE||resizingY!=NONE){
+			isResizing = true;
 			//store old values
 			oldTotalXpos = component->getTotalPosX();
 			oldTotalYpos = component->getTotalPosY();
@@ -77,6 +78,7 @@ void GuiFeatureResize::handleEvent(const GuiEvent &event)
 			oldYpos = component->ypos;
 			
 		}
+		return isResizing;
 	}
 	else if (event.getType() == GuiEventType::UNSELECT){
 		resizingX = NONE;
@@ -113,7 +115,9 @@ void GuiFeatureResize::handleEvent(const GuiEvent &event)
 					oldYpos+delta);
 			}
 		}
+		return isResizing;
 	}
+	return false;
 }
 void GuiFeatureResize::updateCursor()
 {

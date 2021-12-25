@@ -114,7 +114,8 @@ void GuiComponent::removeFeature(GuiFeature* guiFeature){
 }
 void GuiComponent::triggerEvent(const GuiEvent& event){
 	for(auto& feat:features){
-		feat->handleEvent(event);
+		if(feat->handleEvent(event))
+			return;
 	}
 }
 double GuiComponent::getTotalPosX(){

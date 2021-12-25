@@ -29,13 +29,14 @@ void GuiHandler::init(Application* app){
 	mesh.setSettingRead(1,2,false,5,3);
 	mutex.unlock();
 
-	sprite.setTexture(TextureManager::loadFromFile("res/texture/background.png"));
+	//sprite.setTexture(TextureManager::loadFromFile("res/texture/background.png"));
 	sprite.width.setEquation(GuiEqPercent(100));
 	sprite.height.setEquation(GuiEqPercent(100));
 	sprite.texBoundHeight.setEquation(GuiEqSize(100));
 	sprite.texBoundWidth.setEquation(GuiEqSize(100));
 	sprite.texBoundXpos.setEquation(GuiEqSize(-50));
-	
+	sprite.setColor(glm::vec4(227.f/255, 192.f/255, 104.f/255,1));
+
 	// sprite.setFlipY(true);
 	// sprite.setFlipX(true);
 	
@@ -52,6 +53,7 @@ void GuiHandler::init(Application* app){
 
 
 	sprite.addFeature<GuiFeatureResize>();
+	sprite.addFeature<GuiFeatureMove>();
 
 	time(&start);
 	//text.setUtf8(	  u8"w		ok");

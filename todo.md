@@ -1,9 +1,9 @@
 TODO: Application:Change keys in Application with BoolTails
 TODO: GuiComponent: split code from GuiComponent into "node template class"
 TODO: GuiFeatureResize: setRatio
+TODO: GuiFeatureResize: have a bondry, (not just size limit)
 
 #componentModules
-	#move container
 	#animation animation,trigger
 
 #Text

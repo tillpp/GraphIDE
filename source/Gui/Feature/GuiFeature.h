@@ -21,6 +21,7 @@ public:
 
 	virtual std::string getType()=0;
 protected:
-	virtual void handleEvent(const GuiEvent& event)=0;
+	//return true to block further propagation of the event
+	virtual bool handleEvent(const GuiEvent& event)=0;
 	virtual std::vector<GuiAttribute*> getGuiAttribute()=0;
 };
