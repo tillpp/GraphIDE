@@ -3,21 +3,45 @@
 #include "../GuiComponent.h"
 #include "../../Util/BoolTail.h"
 
+/*
+	Only works,if the component is part of a scene.
+*/
+
 class GuiFeatureResize
 	:public GuiFeature
 {	
+	//settings
+	static const size_t borderSize = 16;
 	GuiAttribute minWidth,minHeight,maxWidth,maxHeight;
-	BoolTail onBorder;
+private:
+	bool resizableLeft = 1,
+		resizableTop = 1,
+		resizableRight= true,
+		resizableBottom= true;
+
+	//cached
+	BoolTail onBorderX,onBorderY;
+	bool isResizing = false; 
+	double oldTotalXpos,oldTotalYpos;
+	double oldXpos,oldYpos;
+	double oldWidth,oldHeight; 
+	enum{NONE,LOW,HIGH} resizingX = NONE,resizingY = NONE;
+
 public:
 	GuiFeatureResize(GuiComponent*);
 	~GuiFeatureResize();	
 
 	virtual std::string getType();
 
-	virtual void setResizableX(bool);
-	virtual void setResizableY(bool);
-	virtual void setRatio(double ratio);
+	virtual void setResizableLeft(bool);
+	virtual void setResizableTop(bool);
+	virtual void setResizableRight(bool);
+	virtual void setResizableBottom(bool);
 protected:
 	virtual void handleEvent(const GuiEvent& event)override;
 	virtual std::vector<GuiAttribute*> getGuiAttribute()override;
+
+private:
+	void updateCursor();
+	void setAttribute(GuiAttribute& attr,const double& min,const double& max,const double& value);
 };

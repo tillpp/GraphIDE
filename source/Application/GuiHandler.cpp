@@ -31,11 +31,13 @@ void GuiHandler::init(Application* app){
 
 	sprite.setTexture(TextureManager::loadFromFile("res/texture/background.png"));
 	sprite.width.setEquation(GuiEqPercent(100));
-	sprite.height.setEquation(GuiEqPercent(50));
-	sprite.texBoundHeight.setEquation(GuiEqSize(200));
-	sprite.texBoundWidth.setEquation(GuiEqSize(200));
-	sprite.setFlipY(true);
-	sprite.setFlipX(true);
+	sprite.height.setEquation(GuiEqPercent(100));
+	sprite.texBoundHeight.setEquation(GuiEqSize(100));
+	sprite.texBoundWidth.setEquation(GuiEqSize(100));
+	sprite.texBoundXpos.setEquation(GuiEqSize(-50));
+	
+	// sprite.setFlipY(true);
+	// sprite.setFlipX(true);
 	
 	sprite2 = new Sprite;
 	sprite2->width.setEquation(GuiEqPixel(50));
@@ -65,7 +67,7 @@ void GuiHandler::draw(Application* app){
 	
 	time_t t;
 	time(&t);
-   	sprite.width.overrideCachedValue(500);
+   	//sprite.width.overrideCachedValue(500);
 	
 	// text.addString(app->getText());
 	// text.draw(shader,camera);

@@ -2,11 +2,13 @@
 #include "Attribute/GuiEqPixel.h"
 #include "Application/Application.h"
 
+
 Scene::Scene(glm::vec2 size)
 {
 	screenFrame.width.setEquation(GuiEqPixel(size.x));
 	screenFrame.height.setEquation(GuiEqPixel(size.y));
-
+	screenFrame.scene = this;
+	
 	setSize(size);
 }
 
@@ -34,5 +36,74 @@ void Scene::draw(Shader& shader){
 }
 void Scene::update(){
 	auto mousepos = getInverseViewProjection()*app().getGLNormalizedMousePosition();
-	screenFrame.updateHover(mousepos.x,mousepos.y);
+	updateHover(mousepos.x,mousepos.y);
+	updateClick(mousepos.x,mousepos.y);
+	updateSelecting();
+}
+void Scene::updateHover(const double& mousex,const double& mousey){
+	auto lastHovered = hovered;
+	hovered = screenFrame.getDirectHover(mousex,mousey);
+
+	//unhover
+	if(lastHovered&&lastHovered!=hovered){
+		auto LCA = lastHovered->getLastCommonAncestor(hovered);
+		
+		//trigger unhover old [direct]
+		lastHovered->triggerEvent(GuiEventUnhover(mousex-lastHovered->getTotalPosX(),mousey-lastHovered->getTotalPosY(),true));
+		
+		//trigger unhover old [indirect]
+		GuiComponent* iterator = lastHovered->getParent();
+		while(iterator!=LCA)
+		{
+			iterator->triggerEvent(GuiEventUnhover(mousex-iterator->getTotalPosX(),mousey-iterator->getTotalPosY(),false));
+			iterator = iterator->getParent();
+		}		
+	}
+	//hover
+	if(hovered){
+		//direct
+		hovered->triggerEvent(GuiEventHovering(mousex-hovered->getTotalPosX(),mousey-hovered->getTotalPosY(),true));
+
+		//indirect
+		auto iterator = hovered->getParent();
+		while(iterator){
+			iterator->triggerEvent(GuiEventHovering(mousex-iterator->getTotalPosX(),mousey-iterator->getTotalPosY(),false));
+			iterator = iterator->getParent();
+		}
+	}
+}
+
+void Scene::updateClick(const double& mousex,const double& mousey){
+	if(app().getKey(sf::Mouse::Left)==KeyState::clicked){
+		
+		if(hovered){
+			//trigger click [direct]
+			hovered->triggerEvent(GuiEventClick(mousex-hovered->getTotalPosX(),mousey-hovered->getTotalPosY(),true));
+		
+			//trigger click [indirect]
+			GuiComponent* iterator = hovered->getParent();
+			while(iterator!=nullptr)
+			{
+				iterator->triggerEvent(GuiEventClick(mousex-iterator->getTotalPosX(),mousey-iterator->getTotalPosY(),false));
+				iterator = iterator->getParent();
+			}
+		}
+	}
+}
+void Scene::updateSelecting(){
+	
+	if(app().getKey(sf::Mouse::Left)==KeyState::clicked){
+		auto lastSelected = selected;
+		selected = hovered;
+
+		//trigger unselect	 	
+		if(lastSelected&&lastSelected!=selected){
+			lastSelected->triggerEvent(GuiEventUnselect());
+		}
+	}
+
+	//trigger selected
+	if(selected){
+		selected->triggerEvent(GuiEventSelecting());
+	}	
 }

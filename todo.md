@@ -1,11 +1,10 @@
-TODO:Change keys in Application with BoolTails
-
-direkt/indirekt hover
+TODO: Application:Change keys in Application with BoolTails
+TODO: GuiComponent: split code from GuiComponent into "node template class"
+TODO: GuiFeatureResize: setRatio
 
 #componentModules
-    #Resize Container
-    #animation animation,trigger
-    #move container
+	#move container
+	#animation animation,trigger
 
 #Text
 

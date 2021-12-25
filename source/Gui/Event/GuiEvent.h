@@ -4,13 +4,21 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
 
+enum GuiEventType{
+		HOVERING,
+		UNHOVER,
+		CLICK,
+		SELECTING,
+		UNSELECT,
+		COUNT
+};
 class GuiEvent
 {
 public:
 	GuiEvent(/* args */);
 	~GuiEvent();
 
-	virtual const std::string getType()const;
+	virtual const GuiEventType getType()const;
 };
 
 
@@ -18,26 +26,47 @@ public:
 
 
 
-
-
-
-
-struct GuiEventHover:
+struct GuiEventHovering:
 	public GuiEvent
 {	
-	const double& mousex;
-	const double& mousey;
+	const double& mousexInGui;
+	const double& mouseyInGui;
+	const bool& direct;
 
-	GuiEventHover(const double& mousex,const double& mousey);
-	virtual const std::string getType()const;
+	GuiEventHovering(const double& mousexInGui,const double& mouseyInGui,const bool& direct);
+	virtual const GuiEventType getType()const;
 };
 
 struct GuiEventUnhover:
 	public GuiEvent
 {	
-	const double& mousex;
-	const double& mousey;
+	const double& mousexInGui;
+	const double& mouseyInGui;
+	const bool& direct;
 
-	GuiEventUnhover(const double& mousex,const double& mousey);
-	virtual const std::string getType()const;
+	GuiEventUnhover(const double& mousexInGui,const double& mouseyInGui,const bool& direct);
+	virtual const GuiEventType getType()const;
+};
+struct GuiEventClick:
+	public GuiEvent
+{	
+	const double& mousexInGui;
+	const double& mouseyInGui;
+	const bool& direct;
+
+	GuiEventClick(const double& mousexInGui,const double& mouseyInGui,const bool& direct);
+	virtual const GuiEventType getType()const;
+};
+
+struct GuiEventSelecting:
+	public GuiEvent
+{	
+	GuiEventSelecting();
+	virtual const GuiEventType getType()const;
+};
+struct GuiEventUnselect:
+	public GuiEvent
+{	
+	GuiEventUnselect();
+	virtual const GuiEventType getType()const;
 };

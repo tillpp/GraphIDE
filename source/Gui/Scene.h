@@ -16,4 +16,12 @@ public:
 	void draw(Shader&);
 
 	void update();
+
+	//hover
+	GuiComponent* hovered = nullptr;  
+	GuiComponent* selected = nullptr; // hover + click  
+private:
+	void updateHover(const double& mousex,const double& mousey);
+	void updateClick(const double& mousex,const double& mousey);
+	void updateSelecting();
 };

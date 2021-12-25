@@ -19,20 +19,18 @@ GuiComponent::~GuiComponent()
 	}
 	features.clear();
 }
-
-bool GuiComponent::contain(const double& mousePositionX,const double& mousePositionY,const double& x,const double& y){
-	auto relativeMousePositionX = mousePositionX - x;
-	auto relativeMousePositionY = mousePositionY - y;
-
-	if(relativeMousePositionX>xpos&&relativeMousePositionX<xpos+width
-	&&relativeMousePositionY>ypos&&relativeMousePositionY<ypos+height)
+bool GuiComponent::contain(const double& mousePositionX,const double& mousePositionY){
+	if(mousePositionX>cachedTotalPosX&&mousePositionX<cachedTotalPosX+width
+	&&mousePositionY>cachedTotalPosY&&mousePositionY<cachedTotalPosY+height)
 		return true;
 	return false;
 }
 void GuiComponent::draw(Shader& shader,Camera& camera,const double& x ,const double& y){
+	cachedTotalPosX = x+xpos;
+	cachedTotalPosY = y+ypos;
 	for (auto &&child : children)
 	{
-		child->draw(shader,camera,x+xpos,y+ypos);
+		child->draw(shader,camera,cachedTotalPosX,cachedTotalPosY);
 	}
 	
 }
@@ -56,6 +54,7 @@ void GuiComponent::add(GuiComponent* g){
 	//parent connect
 	children.push_back(g);
 	g->parent = this;
+	g->scene = this->scene;
 
 	//attribute connect
 	auto attributes = g->getGuiAttributes();
@@ -69,6 +68,7 @@ void GuiComponent::disconnect(){
 	if(parent)
 		parent->remove(this);
 	parent = nullptr;
+	scene = nullptr;
 }
 void GuiComponent::remove(GuiComponent* g){
 	//disconnect attributes
@@ -86,6 +86,7 @@ void GuiComponent::remove(GuiComponent* g){
 		}
 	}
 	g->parent = nullptr;
+	g->scene = nullptr;
 
 }
 GuiComponent* GuiComponent::getPrevious(){
@@ -116,13 +117,44 @@ void GuiComponent::triggerEvent(const GuiEvent& event){
 		feat->handleEvent(event);
 	}
 }
-void GuiComponent::updateHover(const double& mousex,const double& mousey,const double& parentx,const double& parenty){
-	hover.update(contain(mousex,mousey,parentx,parenty));
-	if(hover)
-		triggerEvent(GuiEventHover(mousex-xpos,mousey-ypos));
-	else if(hover==BoolTail::RELEASE)
-		triggerEvent(GuiEventUnhover{mousex-xpos,mousey-ypos});
-	
-	for(auto& x:children)
-		x->updateHover(mousex,mousey,parentx+xpos,parenty+ypos);
+double GuiComponent::getTotalPosX(){
+	return cachedTotalPosX;
+}
+double GuiComponent::getTotalPosY(){
+	return cachedTotalPosY;
+}
+Scene* GuiComponent::getScene(){
+	return scene;
+}
+std::vector<GuiComponent*> GuiComponent::getAncestors(){
+	std::vector<GuiComponent*> rv;
+	if(parent){
+		rv = parent->getAncestors();
+		rv.push_back(parent);
+	}
+	return rv;
+}
+GuiComponent* GuiComponent::getLastCommonAncestor(GuiComponent* bComponent){
+	auto listA = getAncestors();
+	auto listB = bComponent?bComponent->getAncestors():std::vector<GuiComponent*>();
+
+	GuiComponent* currentLCA = nullptr;
+	size_t count = std::min(listA.size(),listB.size());
+	for (size_t i = 0; i < count; i++){
+		if(listA[i]==listB[i])
+			currentLCA = listB[i];
+	}
+
+	return currentLCA;
+}
+GuiComponent* GuiComponent::getDirectHover(const double& mousex,const double& mousey){
+	for(auto& x:children){
+		auto hoveredComponent = x->getDirectHover(mousex,mousey);
+		if(hoveredComponent){
+			return hoveredComponent;
+		}
+	}
+	if(contain(mousex,mousey))
+		return this;
+	return nullptr;
 }

@@ -2,14 +2,18 @@
 #include "../Attribute/GuiAttribute.h"
 #include "../../Application/Application.h"
 #include "../Event/GuiEvent.h"
+#include "../Scene.h"
+#include <limits>
 
-GuiFeatureResize::GuiFeatureResize(GuiComponent* g)
-	:GuiFeature(g),
-	minWidth(g,true),
-	minHeight(g,false),
-	maxWidth(g,true),
-	maxHeight(g,false)
+GuiFeatureResize::GuiFeatureResize(GuiComponent *g)
+	: GuiFeature(g),
+	  minWidth(g, true),
+	  minHeight(g, false),
+	  maxWidth(g, true),
+	  maxHeight(g, false)
 {
+	maxWidth.setEquation(GuiEqPercent(std::numeric_limits<double>::max()));
+	maxHeight.setEquation(GuiEqPercent(std::numeric_limits<double>::max()));
 }
 GuiFeatureResize::~GuiFeatureResize()
 {
@@ -21,36 +25,137 @@ std::string GuiFeatureResize::getType()
 }
 #include "../../Util/Log.h"
 
+
+
 void GuiFeatureResize::handleEvent(const GuiEvent &event)
 {
-	if(event.getType()=="GuiEventHover"){
-		GuiEventHover* e = (GuiEventHover*)&event;
+	if (event.getType() == GuiEventType::HOVERING )
+	{
+		GuiEventHovering *e = (GuiEventHovering *)&event;
 
-		const size_t borderSize = 16; 
-		bool sizeInX = e->mousex<borderSize||e->mousex>component->width-borderSize;
-		bool sizeInY =e->mousey<borderSize||e->mousey>component->height-borderSize;
-		onBorder.update(sizeInX||sizeInY);
-			
-		if(onBorder==BoolTail::START){
-			sf::Cursor cursor;
-			if (cursor.loadFromSystem(sizeInX?sf::Cursor::SizeHorizontal:sf::Cursor::SizeVertical))
-		    	app().setCursor(cursor);
-		}else if(onBorder==BoolTail::RELEASE){
-			sf::Cursor cursor;
+		bool sizeInX =  (resizableLeft && e->mousexInGui < borderSize) ||
+						(resizableRight && e->mousexInGui > component->width - borderSize);
+		bool sizeInY =  (resizableTop && e->mouseyInGui < borderSize) ||
+						(resizableBottom && e->mouseyInGui > component->height - borderSize);
+		onBorderX.update(sizeInX && e->direct);
+		onBorderY.update(sizeInY && e->direct);
+
+		updateCursor();
+	}
+	else if (event.getType() == GuiEventType::UNHOVER)
+	{
+		onBorderX.update(false);
+		onBorderY.update(false);
+		sf::Cursor cursor;
+		if(!isResizing)
 			if (cursor.loadFromSystem(sf::Cursor::Arrow))
-	    		app().setCursor(cursor);
+				app().setCursor(cursor);
+	}
+	else if (event.getType() == GuiEventType::CLICK)
+	{
+		GuiEventClick *e = (GuiEventClick *)&event;
+		if (resizableLeft && e->mousexInGui < borderSize)
+			resizingX = LOW;
+		if (resizableTop &&e->mouseyInGui < borderSize)
+			resizingY = LOW;
+
+		if (resizableRight &&e->mousexInGui > component->width - borderSize)
+			resizingX = HIGH;
+		if (resizableBottom &&e->mouseyInGui > component->height - borderSize)
+			resizingY = HIGH;
+
+		isResizing = true;		
+		if(resizingX!=NONE||resizingY!=NONE){
+			//store old values
+			oldTotalXpos = component->getTotalPosX();
+			oldTotalYpos = component->getTotalPosY();
+			
+			oldWidth = component->width;
+			oldHeight = component->height;
+			
+			oldXpos = component->xpos;
+			oldYpos = component->ypos;
+			
 		}
-	}else if(event.getType()=="GuiEventUnhover"){
-		onBorder.update(0);
+	}
+	else if (event.getType() == GuiEventType::UNSELECT){
+		resizingX = NONE;
+		resizingY = NONE;
+		isResizing = false;	
 		sf::Cursor cursor;
 		if (cursor.loadFromSystem(sf::Cursor::Arrow))
-	    	app().setCursor(cursor);
+			app().setCursor(cursor);
+	}
+	else if (event.getType() == GuiEventType::SELECTING)
+	{
+		GuiEventSelecting *e = (GuiEventSelecting *)&event;
+		Scene* scene = component->getScene();
+		if(scene&&isResizing){
+			auto mousepos = scene->getInverseViewProjection()*app().getGLNormalizedMousePosition();
+			if(resizingX==HIGH)
+				setAttribute(component->width,minWidth,maxWidth,mousepos.x-oldTotalXpos);
+			if(resizingY==HIGH)
+				setAttribute(component->height,minHeight,maxHeight,mousepos.y-oldTotalYpos);
+			if(resizingX==LOW){
+				double delta = mousepos.x-oldTotalXpos;
+				setAttribute(component->width,minWidth,maxWidth,oldWidth-delta);
+				setAttribute(component->xpos,
+					oldXpos+oldWidth-maxWidth,
+					oldXpos+oldWidth-minWidth,
+					oldXpos+delta);
+			}
+			if(resizingY==LOW){
+				double delta = mousepos.y-oldTotalYpos;
+				setAttribute(component->height,minHeight,maxHeight,oldHeight-delta);
+				setAttribute(component->ypos,
+					oldYpos+oldHeight-maxHeight,
+					oldYpos+oldHeight-minHeight,
+					oldYpos+delta);
+			}
+		}
 	}
 }
+void GuiFeatureResize::updateCursor()
+{
+	if (onBorderX == BoolTail::START || onBorderX == BoolTail::RELEASE || onBorderY == BoolTail::START || onBorderY == BoolTail::RELEASE)
+	{
+		sf::Cursor cursor;
+		if (onBorderX)
+		{
+			if (cursor.loadFromSystem(sf::Cursor::SizeHorizontal))
+				app().setCursor(cursor);
+		}
+		else if (onBorderY)
+		{
+			if (cursor.loadFromSystem(sf::Cursor::SizeVertical))
+				app().setCursor(cursor);
+		}
+		else if(!isResizing)
+			if (cursor.loadFromSystem(sf::Cursor::Arrow))
+				app().setCursor(cursor);
+	}
+}
+
 std::vector<GuiAttribute *> GuiFeatureResize::getGuiAttribute()
 {
-	return std::vector<GuiAttribute *>{&minWidth, &minHeight,& maxWidth, &maxHeight};
+	return std::vector<GuiAttribute *>{&minWidth, &minHeight, &maxWidth, &maxHeight};
 }
-void GuiFeatureResize::setResizableX(bool) {}
-void GuiFeatureResize::setResizableY(bool) {}
-void GuiFeatureResize::setRatio(double ratio) {}
+void GuiFeatureResize::setResizableLeft(bool b){
+	resizableLeft = b;
+}
+void GuiFeatureResize::setResizableTop(bool b){
+	resizableTop = b;
+}
+void GuiFeatureResize::setResizableRight(bool b){
+	resizableRight = b;
+}
+void GuiFeatureResize::setResizableBottom(bool b){
+	resizableBottom = b;
+}
+void GuiFeatureResize::setAttribute(GuiAttribute& attr,const double& min,const double& max,const double& value){
+	if(max<value)
+		return attr.overrideCachedValue(max);
+	if(min>value)
+		return attr.overrideCachedValue(min);
+	return attr.overrideCachedValue(value);
+}
