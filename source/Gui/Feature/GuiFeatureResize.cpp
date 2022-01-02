@@ -29,16 +29,18 @@ std::string GuiFeatureResize::getType()
 
 bool GuiFeatureResize::handleEvent(const GuiEvent &event)
 {
-	if (event.getType() == GuiEventType::HOVERING )
+	if (event.getType() == GuiEventType::HOVERING)
 	{
 		GuiEventHovering *e = (GuiEventHovering *)&event;
+		if(!e->direct)
+			return false;
 
 		bool sizeInX =  (resizableLeft && e->mousexInGui < borderSize) ||
 						(resizableRight && e->mousexInGui > component->width - borderSize);
 		bool sizeInY =  (resizableTop && e->mouseyInGui < borderSize) ||
 						(resizableBottom && e->mouseyInGui > component->height - borderSize);
-		onBorderX.update(sizeInX && e->direct);
-		onBorderY.update(sizeInY && e->direct);
+		onBorderX.update(sizeInX);
+		onBorderY.update(sizeInY);
 
 		updateCursor();
 		return onBorderX||onBorderY;
@@ -47,14 +49,14 @@ bool GuiFeatureResize::handleEvent(const GuiEvent &event)
 	{
 		onBorderX.update(false);
 		onBorderY.update(false);
-		sf::Cursor cursor;
-		if(!isResizing)
-			if (cursor.loadFromSystem(sf::Cursor::Arrow))
-				app().setCursor(cursor);
+		updateCursor();
 	}
 	else if (event.getType() == GuiEventType::CLICK)
 	{
 		GuiEventClick *e = (GuiEventClick *)&event;
+		if(!e->direct)
+			return false;
+
 		if (resizableLeft && e->mousexInGui < borderSize)
 			resizingX = LOW;
 		if (resizableTop &&e->mouseyInGui < borderSize)
@@ -77,16 +79,16 @@ bool GuiFeatureResize::handleEvent(const GuiEvent &event)
 			oldXpos = component->xpos;
 			oldYpos = component->ypos;
 			
-		}
+		}else 
+			isResizing = false;
+
 		return isResizing;
 	}
 	else if (event.getType() == GuiEventType::UNSELECT){
 		resizingX = NONE;
 		resizingY = NONE;
 		isResizing = false;	
-		sf::Cursor cursor;
-		if (cursor.loadFromSystem(sf::Cursor::Arrow))
-			app().setCursor(cursor);
+		updateCursor();
 	}
 	else if (event.getType() == GuiEventType::SELECTING)
 	{

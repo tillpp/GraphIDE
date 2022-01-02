@@ -31,4 +31,5 @@ protected:
 
 private:
 	void setAttribute(GuiAttribute& attr,const double& min,const double& max,const double& value);
+	void updateCursor();
 };

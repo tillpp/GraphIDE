@@ -35,19 +35,13 @@ bool GuiFeatureMove::handleEvent(const GuiEvent &event)
 	{
 		GuiEventHovering *e = (GuiEventHovering *)&event;
 		onHover.update(e->direct);
-		if(onHover==BoolTail::START){
-			sf::Cursor cursor;
-			if (cursor.loadFromSystem(sf::Cursor::SizeAll))
-					app().setCursor(cursor); 
-		}
+		updateCursor();
 		return onHover;
 	}
 	else if (event.getType() == GuiEventType::UNHOVER)
 	{
 		onHover.update(false);
-		sf::Cursor cursor;
-		if (cursor.loadFromSystem(sf::Cursor::Arrow))
-			app().setCursor(cursor);
+		updateCursor();
 	}
 	else if (event.getType() == GuiEventType::CLICK)
 	{
@@ -71,9 +65,8 @@ bool GuiFeatureMove::handleEvent(const GuiEvent &event)
 	}
 	else if (event.getType() == GuiEventType::UNSELECT){
 		isMoving = false;	
-		sf::Cursor cursor;
-		if (cursor.loadFromSystem(sf::Cursor::Arrow))
-			app().setCursor(cursor);
+		onHover.update(false);
+		updateCursor();
 	}
 	else if (event.getType() == GuiEventType::SELECTING)
 	{
@@ -103,4 +96,15 @@ void GuiFeatureMove::setAttribute(GuiAttribute& attr,const double& min,const dou
 	if(min>value)
 		return attr.overrideCachedValue(min);
 	return attr.overrideCachedValue(value);
+}
+void GuiFeatureMove::updateCursor(){
+	if(onHover==BoolTail::START){
+		sf::Cursor cursor;
+		if (cursor.loadFromSystem(sf::Cursor::SizeAll))
+			app().setCursor(cursor); 
+	}else if(onHover==BoolTail::RELEASE){
+		sf::Cursor cursor;
+		if (cursor.loadFromSystem(sf::Cursor::Arrow))
+			app().setCursor(cursor); 	
+	}
 }
