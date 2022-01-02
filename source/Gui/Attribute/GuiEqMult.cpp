@@ -12,8 +12,8 @@ GuiEqMult::~GuiEqMult()
 	delete a;
 }
 
-double GuiEqMult::evaluate(GuiComponent &guiComponent, bool xAxis){
-	return value*a->evaluate(guiComponent,xAxis);
+double GuiEqMult::evaluate(GuiComponent &guiComponent,const double& currentValue, bool xAxis){
+	return value*a->evaluate(guiComponent,currentValue,xAxis);
 }
 std::vector<GuiAttribute *> GuiEqMult::getDependencies(GuiComponent &guiComponent, bool xAxis){
 	return a->getDependencies(guiComponent,xAxis);

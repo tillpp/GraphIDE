@@ -13,7 +13,7 @@ void GuiEqAttach::setAttachType(const AttachType &at)
 GuiEqAttach::~GuiEqAttach()
 {
 }
-double GuiEqAttach::evaluate(GuiComponent &guiComponent, bool xAxis)
+double GuiEqAttach::evaluate(GuiComponent &guiComponent,const double& currentValue,bool xAxis)
 {
 	auto prev = guiComponent.getPrevious();
 	if (prev)

@@ -9,7 +9,7 @@ public:
 	GuiEqMax(const GuiEquation& a,const GuiEquation& b);
 	~GuiEqMax();
 
-	virtual double evaluate(GuiComponent& guiComponent,bool xAxis)override;
+	virtual double evaluate(GuiComponent& guiComponent,const double& currentValue,bool xAxis)override;
 	virtual std::vector<GuiAttribute*> getDependencies(GuiComponent& guiComponent,bool xAxis)override;
 	virtual GuiEquation* clone()const override; 
 };

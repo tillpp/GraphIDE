@@ -13,10 +13,10 @@ GuiEqMin::~GuiEqMin()
 	delete a;
 	delete b;
 }
-double GuiEqMin::evaluate(GuiComponent& guiComponent,bool xAxis){
+double GuiEqMin::evaluate(GuiComponent& guiComponent,const double& currentValue,bool xAxis){
 	return std::min(
-		a->evaluate(guiComponent,xAxis),
-		b->evaluate(guiComponent,xAxis)
+		a->evaluate(guiComponent,currentValue,xAxis),
+		b->evaluate(guiComponent,currentValue,xAxis)
 	);
 }
 std::vector<GuiAttribute*> GuiEqMin::getDependencies(GuiComponent& guiComponent,bool xAxis){

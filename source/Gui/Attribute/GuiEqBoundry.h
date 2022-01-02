@@ -1,15 +1,15 @@
 #pragma once
 #include "GuiEquation.h"
 
-class GuiEqTextureHoldRatio
-:public GuiEquation
+class GuiEqBoundry
+	:public GuiEquation
 {
+	GuiEquation* min,*max;
 public:
-	GuiEqTextureHoldRatio();
-	~GuiEqTextureHoldRatio();
-	
+	GuiEqBoundry(const GuiEquation& min,const GuiEquation& max);
+	~GuiEqBoundry();
+
 	double evaluate(GuiComponent& guiComponent,const double& currentValue,bool xAxis);
 	std::vector<GuiAttribute*> getDependencies(GuiComponent& guiComponent,bool xAxis);
 	GuiEquation* clone()const; 
 };
-

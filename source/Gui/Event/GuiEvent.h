@@ -12,6 +12,7 @@ enum GuiEventType{
 		UNSELECT,
 		COUNT
 };
+
 class GuiEvent
 {
 public:

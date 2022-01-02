@@ -12,7 +12,7 @@ GuiEqTexturePercent::GuiEqTexturePercent(double percent)
 GuiEqTexturePercent::~GuiEqTexturePercent()
 {
 }
-double GuiEqTexturePercent::evaluate(GuiComponent& guiComponent,bool xAxis){
+double GuiEqTexturePercent::evaluate(GuiComponent& guiComponent,const double& currentValue,bool xAxis){
 	if(guiComponent.getType()=="Sprite"){
 		auto sprite = ((Sprite*)(&guiComponent));
 		return xAxis?sprite->texWidth*ratio:sprite->texHeight*ratio;

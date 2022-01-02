@@ -13,8 +13,8 @@ GuiEqSub::~GuiEqSub()
 	delete b;
 }
 
-double GuiEqSub::evaluate(GuiComponent &guiComponent, bool xAxis){
-	return a->evaluate(guiComponent,xAxis)-b->evaluate(guiComponent,xAxis);
+double GuiEqSub::evaluate(GuiComponent &guiComponent,const double& currentValue,bool xAxis){
+	return a->evaluate(guiComponent,currentValue,xAxis)-b->evaluate(guiComponent,currentValue,xAxis);
 }
 std::vector<GuiAttribute *> GuiEqSub::getDependencies(GuiComponent &guiComponent, bool xAxis){
 	auto rv = a->getDependencies(guiComponent,xAxis);

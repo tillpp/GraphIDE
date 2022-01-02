@@ -11,7 +11,7 @@ GuiEqPercent::~GuiEqPercent()
 {
 }
 
-double GuiEqPercent::evaluate(GuiComponent& guiComponent,bool xAxis){
+double GuiEqPercent::evaluate(GuiComponent& guiComponent,const double& currentValue,bool xAxis){
 	auto parent = guiComponent.getParent();
 	if(parent){
 		return ratio*(xAxis?parent->width:parent->height);

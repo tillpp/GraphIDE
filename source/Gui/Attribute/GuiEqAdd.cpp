@@ -12,9 +12,8 @@ GuiEqAdd::~GuiEqAdd()
 	delete a;
 	delete b;
 }
-
-double GuiEqAdd::evaluate(GuiComponent &guiComponent, bool xAxis){
-	return a->evaluate(guiComponent,xAxis)+b->evaluate(guiComponent,xAxis);
+double GuiEqAdd::evaluate(GuiComponent &guiComponent,const double& currentValue, bool xAxis){
+	return a->evaluate(guiComponent,currentValue,xAxis)+b->evaluate(guiComponent,currentValue,xAxis);
 }
 std::vector<GuiAttribute *> GuiEqAdd::getDependencies(GuiComponent &guiComponent, bool xAxis){
 	auto rv = a->getDependencies(guiComponent,xAxis);

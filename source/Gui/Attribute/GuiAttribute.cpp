@@ -28,7 +28,7 @@ void GuiAttribute::updateValue()
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	double oldCachedValue = cachedValue;
 	if (equation)
-		cachedValue = equation->evaluate(*component, xAxis);
+		cachedValue = equation->evaluate(*component,cachedValue,xAxis);
 	if (cachedValue != oldCachedValue)
 		propagateChange();
 }

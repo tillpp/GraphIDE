@@ -8,7 +8,7 @@ GuiEqFlex::GuiEqFlex(/* args */)
 GuiEqFlex::~GuiEqFlex()
 {
 }
-double GuiEqFlex::evaluate(GuiComponent& guiComponent,bool xAxis){
+double GuiEqFlex::evaluate(GuiComponent& guiComponent,const double& currentValue,bool xAxis){
 	auto children = guiComponent.getChildren();
 	double maxSize = 0;
 	for (auto &child : children)

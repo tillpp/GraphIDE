@@ -13,10 +13,10 @@ GuiEqMax::~GuiEqMax()
 	delete a;
 	delete b;
 }
-double GuiEqMax::evaluate(GuiComponent& guiComponent,bool xAxis){
+double GuiEqMax::evaluate(GuiComponent& guiComponent,const double& currentValue,bool xAxis){
 	return std::max(
-		a->evaluate(guiComponent,xAxis),
-		b->evaluate(guiComponent,xAxis)
+		a->evaluate(guiComponent,currentValue,xAxis),
+		b->evaluate(guiComponent,currentValue,xAxis)
 	);
 }
 std::vector<GuiAttribute*> GuiEqMax::getDependencies(GuiComponent& guiComponent,bool xAxis){

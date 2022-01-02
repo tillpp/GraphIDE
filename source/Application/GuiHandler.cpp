@@ -51,10 +51,10 @@ void GuiHandler::init(Application* app){
 	scene.add(&sprite);
 	sprite.add(sprite2);
 
-
 	sprite.addFeature<GuiFeatureResize>();
 	sprite.addFeature<GuiFeatureMove>();
-
+	sprite2->addFeature<GuiFeatureMove>();
+	
 	time(&start);
 	//text.setUtf8(	  u8"w		ok");
 	//text2.setUtf8(	  u8"wass	hmm");

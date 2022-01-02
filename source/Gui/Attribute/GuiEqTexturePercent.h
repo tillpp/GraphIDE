@@ -9,7 +9,7 @@ public:
 	GuiEqTexturePercent(double percent);
 	~GuiEqTexturePercent();
 	
-	double evaluate(GuiComponent& guiComponent,bool xAxis);
+	double evaluate(GuiComponent& guiComponent,const double& currentValue,bool xAxis);
 	std::vector<GuiAttribute*> getDependencies(GuiComponent& guiComponent,bool xAxis);
 	GuiEquation* clone()const; 
 

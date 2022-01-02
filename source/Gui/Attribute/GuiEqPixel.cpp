@@ -8,7 +8,7 @@ GuiEqPixel::GuiEqPixel(double x)
 GuiEqPixel::~GuiEqPixel()
 {
 }
-double GuiEqPixel::evaluate(GuiComponent& guiComponent,bool xAxis){
+double GuiEqPixel::evaluate(GuiComponent& guiComponent,const double& currentValue,bool xAxis){
 	return value;
 }
 std::vector<GuiAttribute*> GuiEqPixel::getDependencies(GuiComponent& guiComponent,bool xAxis){

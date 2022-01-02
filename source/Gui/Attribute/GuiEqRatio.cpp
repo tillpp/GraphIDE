@@ -10,7 +10,7 @@ GuiEqRatio::~GuiEqRatio()
 {
 }
 
-double GuiEqRatio::evaluate(GuiComponent& guiComponent,bool xAxis){
+double GuiEqRatio::evaluate(GuiComponent& guiComponent,const double& currentValue,bool xAxis){
 	return xAxis?guiComponent.height*ratio:guiComponent.width/ratio;
 }
 std::vector<GuiAttribute*> GuiEqRatio::getDependencies(GuiComponent& guiComponent,bool xAxis){
