@@ -150,6 +150,7 @@ bool GuiAttribute::checkCyclicDependency(GuiAttribute *origin)
 
 void GuiAttribute::propagateChange()
 {
+	component->triggerEvent(GuiEventAttributeChange(*this));
 	for (auto &depender : dependers)
 	{
 		depender->updateValue();

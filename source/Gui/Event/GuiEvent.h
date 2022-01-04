@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
+#include "../Attribute/GuiAttribute.h"
 
 enum GuiEventType{
 		HOVERING,
@@ -10,6 +11,7 @@ enum GuiEventType{
 		CLICK,
 		SELECTING,
 		UNSELECT,
+		ATTRIBUTECHANGE,
 		COUNT
 };
 
@@ -71,3 +73,11 @@ struct GuiEventUnselect:
 	GuiEventUnselect();
 	virtual const GuiEventType getType()const;
 };
+struct GuiEventAttributeChange:
+	public GuiEvent
+{	
+	const GuiAttribute& guiAttribute;
+	GuiEventAttributeChange(const GuiAttribute& guiAttribute);
+	virtual const GuiEventType getType()const;
+};
+

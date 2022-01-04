@@ -12,10 +12,15 @@ GuiFeatureMove::GuiFeatureMove(GuiComponent *g)
 	  borderWidth(g, true),
 	  borderHeight(g, false)
 {
-	borderTop.setEquation(GuiEqPixel(-std::numeric_limits<double>::max()));
-	borderLeft.setEquation(GuiEqPixel(-std::numeric_limits<double>::max()));
-	borderWidth.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
-	borderHeight.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
+	//borderTop.setEquation(GuiEqPixel(-std::numeric_limits<double>::max()));
+	//borderLeft.setEquation(GuiEqPixel(-std::numeric_limits<double>::max()));
+	//borderWidth.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
+	//borderHeight.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
+
+	borderTop.setEquation(GuiEqPixel(0));
+	borderLeft.setEquation(GuiEqPixel(0));
+	borderWidth.setEquation(GuiEqPercent(100));
+	borderHeight.setEquation(GuiEqPercent(100));
 }
 GuiFeatureMove::~GuiFeatureMove()
 {
@@ -81,6 +86,15 @@ bool GuiFeatureMove::handleEvent(const GuiEvent &event)
 			setAttribute(component->ypos,borderTop,borderHeight-component->height,oldYpos+deltay);
 		}
 		return isMoving;	
+	}else if (event.getType() == GuiEventType::ATTRIBUTECHANGE){
+		GuiEventAttributeChange* e = (GuiEventAttributeChange*)&event;
+		
+		if(&e->guiAttribute==&borderLeft||&e->guiAttribute==&borderWidth||&e->guiAttribute==&component->width){
+			setAttribute(component->xpos,borderLeft,borderWidth-component->width,component->xpos);
+		}else if(&e->guiAttribute==&borderTop||&e->guiAttribute==&borderHeight||&e->guiAttribute==&component->height){
+			setAttribute(component->ypos,borderTop,borderHeight-component->height,component->ypos);
+		}
+
 	}
 	return false;
 }

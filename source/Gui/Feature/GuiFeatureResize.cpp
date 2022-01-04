@@ -12,8 +12,11 @@ GuiFeatureResize::GuiFeatureResize(GuiComponent *g)
 	  maxWidth(g, true),
 	  maxHeight(g, false)
 {
-	maxWidth.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
-	maxHeight.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
+	//maxWidth.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
+	//maxHeight.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
+	maxHeight.setEquation(GuiEqPercent(100));
+	maxWidth.setEquation(GuiEqPercent(100));
+	
 }
 GuiFeatureResize::~GuiFeatureResize()
 {
@@ -118,6 +121,14 @@ bool GuiFeatureResize::handleEvent(const GuiEvent &event)
 			}
 		}
 		return isResizing;
+	}else if (event.getType() == GuiEventType::ATTRIBUTECHANGE){
+		GuiEventAttributeChange* e = (GuiEventAttributeChange*)&event;
+		
+		if(&e->guiAttribute==&minWidth||&e->guiAttribute==&maxWidth){
+			setAttribute(component->width,minWidth,maxWidth,component->width);
+		}else if(&e->guiAttribute==&minHeight||&e->guiAttribute==&maxHeight){
+			setAttribute(component->height,minHeight,maxHeight,component->height);
+		}
 	}
 	return false;
 }
