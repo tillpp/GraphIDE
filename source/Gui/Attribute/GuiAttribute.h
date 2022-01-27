@@ -1,10 +1,13 @@
 #pragma once
 class GuiComponent;
 class GuiEquation;
+class GuiAttributeKey;
 #include <mutex>
 #include <vector>
 #include <set>
 #include <functional> 
+#include "GuiAttributeKey.h"
+
 class GuiAttribute
 {
 private:
@@ -16,6 +19,8 @@ private:
 	
 	double cachedValue = 0;
 	bool xAxis;
+
+	GuiAttributeKey* locked = nullptr; //If set, cachedoverride doesnt work anymore
 protected:
 	void deregisterDepender(GuiAttribute*);
 	void registerDepender(GuiAttribute*); //no checking for cyclic dependencies
@@ -35,7 +40,13 @@ public:
 	void updateValue();
 	//this is a [SLOW FUNCTION] 
 	void setEquation(const GuiEquation& eq);
-	void overrideCachedValue(double);
+	void overrideCachedValue(double,GuiAttributeKey* key = nullptr);
+
+
+	//Lock functions
+	bool lock(GuiAttributeKey*);
+	bool unlock(GuiAttributeKey*);
+
 
 	//Use this before moving the GuiComponent
 	void deconnect();

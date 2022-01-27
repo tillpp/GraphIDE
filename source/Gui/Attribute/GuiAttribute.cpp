@@ -57,12 +57,14 @@ void GuiAttribute::setEquation(const GuiEquation &eq)
 
 	updateValue();
 }
-void GuiAttribute::overrideCachedValue(double d)
+void GuiAttribute::overrideCachedValue(double d,GuiAttributeKey* key)
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
-	if(cachedValue!=d){
-		cachedValue = d;
-		propagateChange();
+	if(locked==key){
+		if(cachedValue!=d){
+			cachedValue = d;
+			propagateChange();
+		}
 	}
 }
 
@@ -154,5 +156,30 @@ void GuiAttribute::propagateChange()
 	for (auto &depender : dependers)
 	{
 		depender->updateValue();
+	}
+}
+
+bool GuiAttribute::lock(GuiAttributeKey* key){
+	mutex.lock();
+	if(!locked){
+		locked = key;	
+		key->registerGuiAttribute(this);
+		mutex.unlock();
+		return true;
+	}else {
+		mutex.unlock();
+		return false;
+	}
+}
+bool GuiAttribute::unlock(GuiAttributeKey* key){
+	mutex.lock();
+	if(locked==key){
+		locked = nullptr;
+
+		mutex.unlock();
+		return true;
+	}else {
+		mutex.unlock();
+		return false;
 	}
 }
