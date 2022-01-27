@@ -71,7 +71,7 @@ bool GuiFeatureResize::handleEvent(const GuiEvent &event)
 			resizingY = HIGH;
 	
 		if(resizingX!=NONE||resizingY!=NONE){
-			isResizing = true;
+			isResizing =! isResizing;
 			//store old values
 			oldTotalXpos = component->getTotalPosX();
 			oldTotalYpos = component->getTotalPosY();
