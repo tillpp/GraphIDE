@@ -11,6 +11,7 @@ class GuiAttributeKey
 	std::vector<GuiAttribute*> locked;
 
 	void registerGuiAttribute(GuiAttribute*);
+	void unregisterGuiAttribute(GuiAttribute*);
 public:
 	~GuiAttributeKey();
 };

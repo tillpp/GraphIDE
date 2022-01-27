@@ -13,6 +13,8 @@ GuiAttribute::GuiAttribute(GuiComponent *compo, bool xAxis)
 GuiAttribute::~GuiAttribute()
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
+	if(locked)
+		unlock(locked);
 	deconnect();
 	if (equation)
 		delete equation;
@@ -175,6 +177,7 @@ bool GuiAttribute::unlock(GuiAttributeKey* key){
 	mutex.lock();
 	if(locked==key){
 		locked = nullptr;
+		key->unregisterGuiAttribute(this);
 
 		mutex.unlock();
 		return true;
