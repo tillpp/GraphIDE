@@ -7,10 +7,10 @@
 
 GuiFeatureResize::GuiFeatureResize(GuiComponent *g)
 	: GuiFeature(g),
-	  minWidth(g, true),
-	  minHeight(g, false),
-	  maxWidth(g, true),
-	  maxHeight(g, false)
+	  minWidth(g, true,"resize.min.width"),
+	  minHeight(g, false,"resize.min.height"),
+	  maxWidth(g, true,"resize.max.width"),
+	  maxHeight(g, false,"resize.max.height")
 {
 	//maxWidth.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
 	//maxHeight.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));

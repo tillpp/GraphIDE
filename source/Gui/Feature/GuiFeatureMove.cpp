@@ -7,10 +7,10 @@
 
 GuiFeatureMove::GuiFeatureMove(GuiComponent *g)
 	: GuiFeature(g),
-	  borderLeft(g, true),
-	  borderTop(g, false),
-	  borderWidth(g, true),
-	  borderHeight(g, false)
+	  borderLeft(g, true, "move.border.left"),
+	  borderTop(g, false,"move.border.top"),
+	  borderWidth(g, true,"move.border.width"),
+	  borderHeight(g, false,"move.border.height")
 {
 	//borderTop.setEquation(GuiEqPixel(-std::numeric_limits<double>::max()));
 	//borderLeft.setEquation(GuiEqPixel(-std::numeric_limits<double>::max()));
