@@ -11,8 +11,11 @@ class GuiAttributeKey;
 class GuiAttribute
 {
 private:
+	friend GuiComponent;
 	std::recursive_mutex& mutex;
 	
+	std::string name;
+
 	GuiEquation* equation = nullptr;
 	std::set<GuiAttribute*> dependers;
 	GuiComponent* component; 
@@ -30,12 +33,15 @@ protected:
 public:
 	operator double();
 
-	GuiAttribute(GuiComponent*,bool xAxis);
+	GuiAttribute(GuiComponent*,bool xAxis,std::string name);
 	GuiAttribute(GuiAttribute&)=delete;
 
 	~GuiAttribute();
 
 	std::vector<GuiAttribute*> getDependencies();
+
+	//only evaluate no changes tho
+	double evaluate(GuiEquation& eq);
 
 	void updateValue();
 	//this is a [SLOW FUNCTION] 

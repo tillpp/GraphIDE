@@ -3,11 +3,12 @@
 #include "../GuiComponent.h"
 #include "../../Util/Log.h"
 
-GuiAttribute::GuiAttribute(GuiComponent *compo, bool xAxis)
+GuiAttribute::GuiAttribute(GuiComponent *compo, bool xAxis,std::string name)
 	: mutex(compo->mutex)
 {
 	this->component = compo;
 	this->xAxis = xAxis;
+	this->name = name;
 }
 
 GuiAttribute::~GuiAttribute()
@@ -25,6 +26,11 @@ GuiAttribute::operator double()
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	return cachedValue;
 }
+double GuiAttribute::evaluate(GuiEquation& eq){
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	return eq.evaluate(*component,cachedValue,xAxis);
+}
+
 void GuiAttribute::updateValue()
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);

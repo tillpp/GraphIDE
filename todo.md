@@ -3,8 +3,8 @@ TODO: GuiComponent: split code from GuiComponent into "node template class"
 TODO: GuiFeatureResize: setRatio
 TODO: GuiFeatureStayInside, lets component not outside of parent.
 
-#componentModules
-	#animation animation,trigger
+#animation trigger
+#multiple animation running for one
 
 #Text
 
@@ -15,8 +15,8 @@ TODO: GuiFeatureStayInside, lets component not outside of parent.
 #frame
 #window
 #sliders
-#diagrans
-	circle chart (halb circle etc.)
+#diagrams
+	circle chart (half circle etc.)
 	bar chart
     line chart
 
