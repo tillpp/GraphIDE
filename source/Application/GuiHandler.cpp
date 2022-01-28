@@ -56,6 +56,14 @@ void GuiHandler::init(Application* app){
 	sprite2->addFeature<GuiFeatureResize>();
 	sprite2->addFeature<GuiFeatureMove>();
 
+	auto animation = sprite.createAnimation("test");
+	
+	animation->addKeyFrame(new KeyFrame(5,{
+		new KeyFrameAttributeInformation(GuiEqPixel(50),[](double x)->double{return x;},"height")}));
+	animation->addKeyFrame(new KeyFrame(0.1,{
+	 	new KeyFrameAttributeInformation(GuiEqPixel(720),[](double x)->double{return x;},"height")}));
+    sprite.useAnimation("test");
+
 	time(&start);
 	//text.setUtf8(	  u8"w		ok");
 	//text2.setUtf8(	  u8"wass	hmm");

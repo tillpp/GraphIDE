@@ -26,6 +26,8 @@ class Scene;
 #include "Util/BoolTail.h"
 #include "Util/Node.h"
 
+#include "Animation/AnimationHandler.h"
+
 class GuiComponent
 {
 protected:
@@ -40,6 +42,7 @@ protected:
 	GuiComponent* 				parent = nullptr;
 	std::vector<GuiComponent*> 	children;
 	std::vector<GuiFeature*> 	features;
+	AnimationHandler			animationHandler;
 
 	//cached data
 	double cachedTotalPosX,cachedTotalPosY;
@@ -59,6 +62,8 @@ public:
 	const std::vector<GuiComponent*>& getChildren();
 	virtual std::vector<GuiAttribute*> getGuiAttributes();
 
+	GuiAttribute* getGuiAttribute(std::string name);
+
 	void add(GuiComponent*);
 	void disconnect();
 	void remove(GuiComponent*);
@@ -71,6 +76,7 @@ public:
 	Feature* addFeature(Args... args){
 		auto feature = new Feature(this,args...);
 		features.push_back(feature); 
+		animationHandler.updateAttribute();
 		return feature;
 	}
 
@@ -86,5 +92,9 @@ public:
 
 	//returns the directHoveredComponent
 	virtual GuiComponent* getDirectHover(const double& mousex,const double& mousey);
+
+	// ANIMATION
+	Animation* 	createAnimation(std::string name);
+	void		   useAnimation(std::string name);
 };
 

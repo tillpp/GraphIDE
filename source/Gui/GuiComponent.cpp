@@ -2,7 +2,7 @@
 #include <iostream>
 
 GuiComponent::GuiComponent(/* args */)
-:xpos(this,true),ypos(this,false),width(this,true),height(this,false)
+:xpos(this,true,"x"),ypos(this,false,"y"),width(this,true,"width"),height(this,false,"height"),animationHandler(*this)
 {
 }
 
@@ -18,6 +18,7 @@ GuiComponent::~GuiComponent()
 		delete feature;
 	}
 	features.clear();
+	animationHandler.updateAttribute();
 }
 bool GuiComponent::contain(const double& mousePositionX,const double& mousePositionY){
 	if(mousePositionX>cachedTotalPosX&&mousePositionX<cachedTotalPosX+width
@@ -26,6 +27,8 @@ bool GuiComponent::contain(const double& mousePositionX,const double& mousePosit
 	return false;
 }
 void GuiComponent::draw(Shader& shader,Camera& camera,const double& x ,const double& y){
+	animationHandler.update();
+	
 	cachedTotalPosX = x+xpos;
 	cachedTotalPosY = y+ypos;
 	for (auto &&child : children)
@@ -35,6 +38,13 @@ void GuiComponent::draw(Shader& shader,Camera& camera,const double& x ,const dou
 	
 }
 std::vector<GuiAttribute*> GuiComponent::getGuiAttributes(){
+	/*
+	####################    WARNING    ####################
+	WARNING: If you edit this function: 
+	What ever changes the attributes i.e. removes/adds them
+	must also trigger a Animation.updateAttributes();
+	####################################################### 
+	*/
 	std::vector<GuiAttribute*> rv = {&width,&height,&xpos,&ypos};
 	for (auto &fea : features)
 	{
@@ -111,6 +121,7 @@ void GuiComponent::removeFeature(GuiFeature* guiFeature){
 			i--;
 		}
 	}
+	animationHandler.updateAttribute();
 }
 void GuiComponent::triggerEvent(const GuiEvent& event){
 	for(auto& feat:features){
@@ -158,4 +169,19 @@ GuiComponent* GuiComponent::getDirectHover(const double& mousex,const double& mo
 	if(contain(mousex,mousey))
 		return this;
 	return nullptr;
+}
+GuiAttribute* GuiComponent::getGuiAttribute(std::string name){
+	auto array = getGuiAttributes();
+	for (auto &&i : array)
+	{
+		if(i->name==name)
+			return i;
+	}
+	return nullptr;
+}
+Animation* GuiComponent::createAnimation(std::string name){
+	return animationHandler.createAnimation(name);
+}
+void GuiComponent::useAnimation(std::string name){
+	animationHandler.use(name);
 }
