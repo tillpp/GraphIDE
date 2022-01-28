@@ -2,12 +2,12 @@
 #include "OpenGL/Mesh.h"
 #include "OpenGL/Texture.h"
 
-Sprite::Sprite(/* args */) : texBoundXpos(this, true),
-							 texBoundYpos(this, false),
-							 texBoundWidth(this, true),
-							 texBoundHeight(this, false),
-							 texWidth(this, true),
-							 texHeight(this, false)
+Sprite::Sprite(/* args */) : texBoundXpos(this, true,"texture.x"),
+							 texBoundYpos(this, false,"texture.y"),
+							 texBoundWidth(this, true,"texture.width"),
+							 texBoundHeight(this, false,"texture.height"),
+							 texWidth(this, true,"texture.full.width"),
+							 texHeight(this, false,"texture.full.height")
 {
 	texWidth.setEquation(GuiEqPixel(0));
 	texHeight.setEquation(GuiEqPixel(0));
