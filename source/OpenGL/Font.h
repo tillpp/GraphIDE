@@ -17,13 +17,13 @@ private:
 public:
 	Font(std::string path,size_t characterSize = 32);
 	Texture &getTexture();
-	const sf::Glyph& getGlyph(unsigned int c);
+	const sf::Glyph& getGlyph(unsigned int c,bool bold=false);
 	glm::vec4 getRelativTextureRectGlyph(const sf::Glyph&);
 
 	//get Informations
 	GLfloat getBaseline();
 	GLfloat getLineSpacing();
-	GLfloat getKerning(sf::String& string,unsigned int position);
+	GLfloat getKerning(const sf::String& string,unsigned int position);
 	
 	//rendering
 	void use(Shader& shader);

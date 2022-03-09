@@ -3,11 +3,20 @@ TODO: GuiComponent: split code from GuiComponent into "node template class"
 TODO: GuiFeatureResize: setRatio
 TODO: GuiFeatureStayInside, lets component not outside of parent.
 
-#animation trigger
-#multiple animation running for one
+Animation
+	color
+	texture
+
+#animation trigger,detrigger
+#multiple animation running
+#animation end:
+	repeat
+	just stop	
+
+
 
 #Text
-
+ 
 #Gui
 //"min()" string parsing
 
@@ -27,4 +36,4 @@ Textbox
 	showmore
 
 
-	Text nach left scrollen lassen wenn box außerhalb von boundrie
+	

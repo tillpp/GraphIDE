@@ -25,7 +25,7 @@ class GuiHandler
 
 	//test test stuff
 	Sprite sprite,*sprite2;
-	//Text text,text2;
+	Text text;//,text2;
 
 public:
 	GuiHandler();

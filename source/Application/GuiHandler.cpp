@@ -50,6 +50,7 @@ void GuiHandler::init(Application* app){
 
 	scene.add(&sprite);
 	sprite.add(sprite2);
+	scene.add(&text);
 
 	sprite.addFeature<GuiFeatureResize>();
 	sprite.addFeature<GuiFeatureMove>();

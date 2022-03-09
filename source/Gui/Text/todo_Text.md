@@ -1,0 +1,55 @@
+# TextComponent
+
+TextComponent
+	has getWidth,getHeight
+	has getYOffset // up from baseline
+
+TextUnit	TU		:TextComponent
+	has Text
+TextReverse	TR		:TextComponent
+	has Text
+TextIcon	TI		:TextComponent
+	has Text
+TextScript 	TS		:TextComponent
+	has superscript MonoLineText
+	has subscript	MonoLineText
+MathUpDown	MUD		:TextComponent
+	has a Symbol
+	has superscript	PolyLineText
+	has subscript 	PolyLineText
+MathFrac	MF		:TextComponent
+	has up			PolyLineText
+	has down 		PolyLineText
+MonoLineText MLT
+	has multiple TextComponent
+	has getHeight: max(ch.height+ch.yoffset)+max(-ch.yoffset)
+	has getWidth:  sum(ch.width)	
+PolyLineText PLT	
+	has multiple MLT
+	has getHeight: sum(ch.height)
+	has getWidth:  max(ch.width)
+
+TextSettings TSets
+	font
+	fontsize
+	scriptsize : boolean
+	bold,italic,underline : boolean
+	colour
+	backgroundcolor
+	position x,y
+
+Characterspecificeffects CSE
+	function that override character properties
+
+# Todo
+	TextUnit
+	TextComponent
+	TextSettings
+	MonoLineText
+	PolyLineText
+
+## features
+Let Text scroll to the left,if the Text doesnt fit into it's boundrie
+Show Fulltext,when hovering above cut of text.
+
+unicode characters

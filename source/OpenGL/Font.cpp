@@ -13,15 +13,15 @@ Texture &Font::getTexture()
 	return texture;
 }
 
-const sf::Glyph &Font::getGlyph(unsigned int c)
+const sf::Glyph &Font::getGlyph(unsigned int c,bool bold)
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	if(glyphs.find(c)==glyphs.end()){
-		font.getGlyph(c, characterSize, 0, 0);
+		font.getGlyph(c, characterSize, bold, 0);
 		texture.LoadFromTexture(font.getTexture(characterSize));
 		glyphs.insert(c);
 	}
-	return font.getGlyph(c, characterSize, 0, 0);
+	return font.getGlyph(c, characterSize, bold, 0);
 }
 glm::vec4 Font::getRelativTextureRectGlyph(const sf::Glyph& glyph){
 	glm::vec4 textureRect;
@@ -41,7 +41,7 @@ GLfloat Font::getLineSpacing()
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	return font.getLineSpacing(characterSize);
 }
-GLfloat Font::getKerning(sf::String &string, unsigned int i)
+GLfloat Font::getKerning(const sf::String &string, unsigned int i)
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	if (i)

@@ -33,7 +33,5 @@ windowMenuBar
 ## attributes ?
 Moveables?
 
-## features
-Let Text scroll to the left,if the Text doesnt fit into it's boundrie
-Show Fulltext,when hovering above cut of text.
+
 
