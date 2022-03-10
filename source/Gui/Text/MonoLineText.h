@@ -9,6 +9,9 @@ public:
 	MonoLineText();
 	~MonoLineText();
 
-	void draw(Shader& shader,TextSettings& ts);
+	void draw(Shader& shader,TextSettings ts);
+
+	int getHeight(const TextSettings& ts);
+	int getWidth(const TextSettings& ts);
 };
 

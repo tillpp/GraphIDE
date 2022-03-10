@@ -20,5 +20,8 @@ public:
 
 	virtual void draw(Shader&shader,TextSettings& TextSettings)override;
 	virtual std::string getType()override;
-	virtual int getWidth(TextSettings &ts)override;
+	virtual int getWidth(const TextSettings &ts)override;
+
+	virtual int getHeight(const TextSettings &ts)override;
+	virtual int getYOffset(const TextSettings &ts)override;
 };

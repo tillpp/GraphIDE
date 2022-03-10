@@ -6,8 +6,6 @@ Text::Text(/* args */)
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 
-	mlt = new MonoLineText();
-	
 	width.setEquation(GuiEqPixel(100));
 	height.setEquation(GuiEqPixel(100));
 
@@ -24,7 +22,7 @@ void Text::draw(Shader& shader,Camera& camera,const double& x,const double& y){
 
 	TextSettings ts;
 	ts.font = FontManager::getFont("arial.ttf");//SourceCodePro-Regular.ttf
-	mlt->draw(shader,ts);
+	plt.draw(shader,ts);
 
 	GuiComponent::draw(shader, camera, x, y);
 }

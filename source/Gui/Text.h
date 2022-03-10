@@ -3,12 +3,12 @@
 #include "OpenGL/Camera.h"
 #include "OpenGL/Texture.h"
 #include "Text/TextComponent.h"
-#include "Text/MonoLineText.h"
+#include "Text/PolyLineText.h"
 
 class Text
 	:public GuiComponent
 {
-	MonoLineText* mlt = nullptr;
+	PolyLineText plt;
 public:
 	Text();
 	~Text();

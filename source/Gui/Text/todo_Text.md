@@ -6,18 +6,18 @@ TextComponent
 
 TextUnit	TU		:TextComponent
 	has Text
-TextReverse	TR		:TextComponent
+[]TextReverse	TR		:TextComponent
 	has Text
-TextIcon	TI		:TextComponent
+[]TextIcon	TI		:TextComponent
 	has Text
-TextScript 	TS		:TextComponent
+[]TextScript 	TS		:TextComponent
 	has superscript MonoLineText
 	has subscript	MonoLineText
-MathUpDown	MUD		:TextComponent
+[]MathUpDown	MUD		:TextComponent
 	has a Symbol
 	has superscript	PolyLineText
 	has subscript 	PolyLineText
-MathFrac	MF		:TextComponent
+[]MathFrac	MF		:TextComponent
 	has up			PolyLineText
 	has down 		PolyLineText
 MonoLineText MLT
@@ -31,14 +31,16 @@ PolyLineText PLT
 
 TextSettings TSets
 	font
-	fontsize
-	scriptsize : boolean
-	bold,italic,underline : boolean
+	[]fontsize
+	[]scriptsize : boolean
+	bold,
+	italic,
+	[]underline 
 	colour
 	backgroundcolor
 	position x,y
 
-Characterspecificeffects CSE
+[]Characterspecificeffects CSE
 	function that override character properties
 
 # Todo
@@ -53,3 +55,24 @@ Let Text scroll to the left,if the Text doesnt fit into it's boundrie
 Show Fulltext,when hovering above cut of text.
 
 unicode characters
+
+hover event
+hover to animate: move character up
+hover to animate: color character
+hover to open tooltipwindow
+click event
+
+cursor 
+cursor movement
+writing
+line too big and break line 
+delete (backspace,forward) 
+ctrl delete(backspace,forward)
+selecting text
+	shift
+	mouse select
+copy ctrl+c
+paste ctrl+v
+cut ctrl+x
+undo ctrl+z
+redo ctrl+y
