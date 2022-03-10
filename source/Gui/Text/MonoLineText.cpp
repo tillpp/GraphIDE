@@ -3,7 +3,7 @@
 
 MonoLineText::MonoLineText()
 {
-	components.push_back(new TextUnit("hi"));
+	components.push_back(new TextUnit("Hello world, how are you?"));
 	components.push_back(new TextUnit("ok"));
 }
 

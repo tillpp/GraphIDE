@@ -31,11 +31,12 @@ PolyLineText PLT
 
 TextSettings TSets
 	font
-	[]fontsize
-	[]scriptsize : boolean
+	fontsize
+	smallscript
 	bold,
 	italic,
-	[]underline 
+	underline
+	[]strikethrough
 	colour
 	backgroundcolor
 	position x,y
@@ -44,17 +45,13 @@ TextSettings TSets
 	function that override character properties
 
 # Todo
-	TextUnit
-	TextComponent
+	
 	TextSettings
-	MonoLineText
-	PolyLineText
+	CSE
 
 ## features
 Let Text scroll to the left,if the Text doesnt fit into it's boundrie
 Show Fulltext,when hovering above cut of text.
-
-unicode characters
 
 hover event
 hover to animate: move character up

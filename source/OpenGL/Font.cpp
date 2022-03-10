@@ -34,7 +34,7 @@ glm::vec4 Font::getRelativTextureRectGlyph(const sf::Glyph& glyph){
 GLfloat Font::getBaseline()
 { //from top to the baseline
 	std::lock_guard<std::recursive_mutex> lock(mutex);
-	return 1 - (font.getUnderlinePosition(characterSize) + font.getUnderlineThickness(characterSize));
+	return 1 - (font.getUnderlinePosition(characterSize) + font.getUnderlineThickness(characterSize)*2);
 }
 GLfloat Font::getLineSpacing()
 {
@@ -49,10 +49,22 @@ GLfloat Font::getKerning(const sf::String &string, unsigned int i)
 	else
 		return 0;
 }
+GLfloat Font::getUnderlinePosition(){
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	return font.getUnderlinePosition(characterSize);
+}
+GLfloat Font::getUnderlineThickness(){
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	return font.getUnderlineThickness(characterSize);
+}
 void Font::use(Shader &shader)
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	texture.use(0, shader, "texture1");
 }
 Font::~Font(){
+}
+GLfloat Font::getDisplayTextureCharacterRatio(const size_t& fontSize){
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	return ((GLfloat)fontSize)/characterSize;
 }

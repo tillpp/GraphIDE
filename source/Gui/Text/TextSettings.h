@@ -12,8 +12,9 @@ public:
 	Font* font = nullptr;
 	glm::vec4 textColor = glm::vec4(1,1,1,1);
 	glm::vec4 backgroundColor = glm::vec4(0,0,0,1);
-	bool bold = true,italic = false;//underline = false;
-	// int &fontSize;
-	// int &baseline;
-	// bool& superScript;
+	bool bold = false,italic = false,underline = false;
+	int fontSize = 32;
+	bool smallScript=false;
+
+	GLfloat getDisplayTextureCharacterRatio()const;
 };
