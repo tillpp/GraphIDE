@@ -104,6 +104,26 @@ void TextUnit::draw(Shader &shader, TextSettings &ts)
 		
 		Mesh::rectangle().draw(shader, /*inMatrix * matrix */ letterMatrix);
 	}
+	//Draw Strikethrough
+	if(ts.strikethrough)
+	{
+		Texture::whiteTexture().use(0,shader,"texture1");
+		glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "textureRect"), 0,0,1,1);
+
+		GLfloat xpos 	= ts.x;
+		GLfloat width  	= offset;
+
+		GLfloat ypos 	= dtcr*(ts.font->getLineSpacing())/2 +ts.y;
+		GLfloat height	= dtcr*ts.font->getUnderlineThickness();
+		
+		glm::mat4 letterMatrix = glm::mat4(1.f);
+		letterMatrix = glm::translate(letterMatrix, glm::vec3(xpos, ypos+height, 0.f));
+		if(ts.italic)
+		 	letterMatrix[1] += glm::vec4(-0.15,0,0,0);//change for italic
+		letterMatrix = glm::scale(letterMatrix, glm::vec3(width, -height, 1.f));
+		
+		Mesh::rectangle().draw(shader, /*inMatrix * matrix */ letterMatrix);
+	}
 }
 int TextUnit::getWidth(const TextSettings &ts){
 	if (!ts.font)

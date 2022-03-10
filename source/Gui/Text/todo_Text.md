@@ -36,7 +36,7 @@ TextSettings TSets
 	bold,
 	italic,
 	underline
-	[]strikethrough
+	strikethrough
 	colour
 	backgroundcolor
 	position x,y
@@ -45,9 +45,10 @@ TextSettings TSets
 	function that override character properties
 
 # Todo
-	
-	TextSettings
 	CSE
+
+# future
+	clean TextUnit (Split code: underline,strikethough into class, extend "AfterApplier" baseclass)
 
 ## features
 Let Text scroll to the left,if the Text doesnt fit into it's boundrie

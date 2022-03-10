@@ -12,7 +12,7 @@ public:
 	Font* font = nullptr;
 	glm::vec4 textColor = glm::vec4(1,1,1,1);
 	glm::vec4 backgroundColor = glm::vec4(0,0,0,1);
-	bool bold = false,italic = false,underline = false;
+	bool bold = false,italic = false,underline = false,strikethrough=false;
 	int fontSize = 32;
 	bool smallScript=false;
 
