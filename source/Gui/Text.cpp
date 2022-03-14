@@ -14,6 +14,8 @@ Text::Text(/* args */)
 Text::~Text()
 {
 }
+#include "Text/CharacterEffect/RainbowEffect.h"
+
 void Text::draw(Shader& shader,Camera& camera,const double& x,const double& y){
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	
@@ -22,6 +24,10 @@ void Text::draw(Shader& shader,Camera& camera,const double& x,const double& y){
 
 	TextSettings ts;
 	ts.font = FontManager::getFont("arial.ttf");//SourceCodePro-Regular.ttf
+	
+	static RainbowEffect re;
+
+	ts.effects.push_back(&re);
 	plt.draw(shader,ts);
 
 	GuiComponent::draw(shader, camera, x, y);

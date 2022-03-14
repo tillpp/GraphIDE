@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+class CharacterEffect;
 
 class TextSettings
 {
@@ -17,4 +18,7 @@ public:
 	bool smallScript=false;
 
 	GLfloat getDisplayTextureCharacterRatio()const;
+
+	std::vector<CharacterEffect*> effects;
 };
+#include "CharacterEffect.h"

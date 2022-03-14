@@ -41,11 +41,12 @@ TextSettings TSets
 	backgroundcolor
 	position x,y
 
-[]Characterspecificeffects CSE
+Characterspecificeffects CSE
 	function that override character properties
-
+	pre Glyph
+	pre draw
+	post draw
 # Todo
-	CSE
 
 # future
 	clean TextUnit (Split code: underline,strikethough into class, extend "AfterApplier" baseclass)
@@ -60,6 +61,7 @@ hover to animate: color character
 hover to open tooltipwindow
 click event
 
+# cursor stuff todo 
 cursor 
 cursor movement
 writing
@@ -69,6 +71,7 @@ ctrl delete(backspace,forward)
 selecting text
 	shift
 	mouse select
+open stylewindow (to change style of selected text)
 copy ctrl+c
 paste ctrl+v
 cut ctrl+x

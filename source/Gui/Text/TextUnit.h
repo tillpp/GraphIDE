@@ -14,11 +14,19 @@ class TextUnit
 	:public TextComponent 
 {
 	sf::String text;
+
+	void drawBackground(Shader&shader,TextSettings& TextSettings,GLfloat displayTextureCharacterRatio);
+	void drawUnderline(Shader&shader,TextSettings& TextSettings,GLfloat displayTextureCharacterRatio,GLfloat offset);
+	void drawStrikethrough(Shader&shader,TextSettings& TextSettings,GLfloat displayTextureCharacterRatio,GLfloat offset);
+
 public:
 	TextUnit(std::string utf8text);
 	~TextUnit();
 
 	virtual void draw(Shader&shader,TextSettings& TextSettings)override;
+
+	
+
 	virtual std::string getType()override;
 	virtual int getWidth(const TextSettings &ts)override;
 
