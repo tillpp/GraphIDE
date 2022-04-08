@@ -24,7 +24,9 @@ std::vector<GuiAttribute*> GuiEqFlex::getDependencies(GuiComponent& guiComponent
 	std::vector<GuiAttribute*> rv;
 	for (auto &child : children)
 	{
-		std::vector<GuiAttribute*> attributes = child->getGuiAttributes();
+		std::vector<GuiAttribute*> attributes = xAxis
+		?std::vector<GuiAttribute*>{&child->width,&child->xpos}
+		:std::vector<GuiAttribute*>{&child->height,&child->ypos};
 		rv.insert(rv.end(),attributes.begin(),attributes.end());
 	}
 	return rv;
@@ -32,4 +34,7 @@ std::vector<GuiAttribute*> GuiEqFlex::getDependencies(GuiComponent& guiComponent
 GuiEquation* GuiEqFlex::clone()const{
 	auto rv = new GuiEqFlex;
 	return rv;
+}
+std::string GuiEqFlex::debugInformation(std::string tab){
+	return tab+"# GuiEqFlex \n";
 }

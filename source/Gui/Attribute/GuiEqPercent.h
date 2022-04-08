@@ -13,5 +13,6 @@ public:
 	double evaluate(GuiComponent& guiComponent,const double& currentValue,bool xAxis)override;
 	std::vector<GuiAttribute*> getDependencies(GuiComponent& guiComponent,bool xAxis)override;
 	GuiEquation* clone()const override; 
+	virtual std::string debugInformation(std::string tab)override;
 };
 

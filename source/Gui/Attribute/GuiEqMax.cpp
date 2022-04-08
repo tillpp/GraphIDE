@@ -28,3 +28,6 @@ std::vector<GuiAttribute*> GuiEqMax::getDependencies(GuiComponent& guiComponent,
 GuiEquation* GuiEqMax::clone()const{
 	return new GuiEqMax(*a,*b);
 }
+std::string GuiEqMax::debugInformation(std::string tab){
+	return tab+"# GuiEqMax \n"+a->debugInformation(tab+"\t")+b->debugInformation(tab+"\t");
+}

@@ -19,3 +19,6 @@ std::vector<GuiAttribute*> GuiEqSize::getDependencies(GuiComponent& guiComponent
 GuiEquation* GuiEqSize::clone()const{
 	return new GuiEqSize(ratio*100);
 } 
+std::string GuiEqSize::debugInformation(std::string tab){
+	return tab+"# GuiEqSize  ratio:"+std::to_string(ratio)+"\n";
+}

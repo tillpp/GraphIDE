@@ -21,3 +21,11 @@ GuiEquation* GuiEqPixel::clone()const{
 void GuiEqPixel::setValue(double x){
 	this->value = x;
 }
+#include <iostream>
+#include <string>
+#include <sstream>
+std::string GuiEqPixel::debugInformation(std::string tab){
+	std::ostringstream o;
+	o<< value;
+	return tab+"# GuiEqPixel  value:"+o.str()+"\n";
+}

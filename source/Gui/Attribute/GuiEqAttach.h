@@ -14,6 +14,7 @@ public:
 	virtual double evaluate(GuiComponent& guiComponent,const double& currentValue,bool xAxis)override;
 	virtual std::vector<GuiAttribute*> getDependencies(GuiComponent& guiComponent,bool xAxis)override;
 	virtual GuiEquation* clone()const override; 
+	virtual std::string debugInformation(std::string tab)override;
 
 	void setAttachType(const AttachType& at); 
 private:

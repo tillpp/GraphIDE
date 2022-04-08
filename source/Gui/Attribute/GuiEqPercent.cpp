@@ -29,3 +29,6 @@ GuiEquation* GuiEqPercent::clone()const{
 	rv->ratio = ratio;
 	return rv;
 }
+std::string GuiEqPercent::debugInformation(std::string tab){
+	return tab+"# GuiEqPercent  ratio:"+std::to_string(ratio)+"\n";
+}

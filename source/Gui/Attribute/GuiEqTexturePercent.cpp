@@ -35,3 +35,6 @@ GuiEquation* GuiEqTexturePercent::clone()const{
 void GuiEqTexturePercent::setPercent(double percent){
 	ratio = percent/100;
 }
+std::string GuiEqTexturePercent::debugInformation(std::string tab){
+	return tab+"# GuiEqTexturePercent  ratio:"+std::to_string(ratio)+"\n";
+}

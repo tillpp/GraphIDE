@@ -33,3 +33,6 @@ std::vector<GuiAttribute*> GuiEqTextureHoldRatio::getDependencies(GuiComponent& 
 GuiEquation* GuiEqTextureHoldRatio::clone()const{
 	return new GuiEqTextureHoldRatio;
 } 
+std::string GuiEqTextureHoldRatio::debugInformation(std::string tab){
+	return tab+"# GuiEqTextureHoldRatio \n";
+}

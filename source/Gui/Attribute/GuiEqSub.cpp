@@ -25,3 +25,6 @@ std::vector<GuiAttribute *> GuiEqSub::getDependencies(GuiComponent &guiComponent
 GuiEquation *GuiEqSub::clone() const{
 	return new GuiEqSub(*a,*b);
 }
+std::string GuiEqSub::debugInformation(std::string tab){
+	return tab+"# GuiEqSub \n"+a->debugInformation(tab+"\t")+b->debugInformation(tab+"\t");
+}

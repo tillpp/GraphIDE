@@ -28,3 +28,6 @@ std::vector<GuiAttribute*> GuiEqMin::getDependencies(GuiComponent& guiComponent,
 GuiEquation* GuiEqMin::clone()const{
 	return new GuiEqMin(*a,*b);
 }
+std::string GuiEqMin::debugInformation(std::string tab){
+	return tab+"# GuiEqMin \n"+a->debugInformation(tab+"\t")+b->debugInformation(tab+"\t");
+}

@@ -38,3 +38,6 @@ GuiEquation *GuiEqAttach::clone() const
 {
 	return new GuiEqAttach(attachType);
 }
+std::string GuiEqAttach::debugInformation(std::string tab){
+	return tab+"# GuiEqAttach  AttachType:"+(attachType==AFTER?"AFTER":"BEFORE")+"\n";
+}
