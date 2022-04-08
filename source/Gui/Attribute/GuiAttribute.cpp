@@ -150,7 +150,7 @@ bool GuiAttribute::checkCyclicDependency(GuiAttribute *origin)
 	auto dependencies = getDependencies();
 	for (auto &&dependency : dependencies)
 	{
-		if (dependency == this)
+		if (dependency == origin)
 			return true;
 		if (dependency->checkCyclicDependency(origin))
 			return true;
@@ -191,4 +191,15 @@ bool GuiAttribute::unlock(GuiAttributeKey* key){
 		mutex.unlock();
 		return false;
 	}
+}
+std::string GuiAttribute::debugInformation(std::string tabs){
+	std::string rv;
+	rv+=tabs+"# Dependencies of "+std::to_string((int)this)+" "+name+" of "+std::to_string((int)component)+"\n";
+	if(equation)
+		rv+=equation->debugInformation(tabs+"\t");
+	auto dpcs = this->getDependencies();
+	for(auto& dpc:dpcs){
+		rv+=dpc->debugInformation(tabs+"\t");
+	}
+	return rv;
 }

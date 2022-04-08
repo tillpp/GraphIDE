@@ -18,7 +18,7 @@ Sprite::Sprite(/* args */) : texBoundXpos(this, true,"texture.x"),
 Sprite::~Sprite()
 {
 }
-void Sprite::draw(Shader &shader, Camera &camera, const double& x, const double& y)
+void Sprite::drawInner(Shader &shader, Camera &camera, const double& x, const double& y)
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 
@@ -50,7 +50,6 @@ void Sprite::draw(Shader &shader, Camera &camera, const double& x, const double&
 	matrix = glm::scale(matrix, glm::vec3((double)width, (double)height, 1));
 
 	Mesh::rectangle().draw(shader, matrix);
-	GuiComponent::draw(shader, camera, x, y);
 }
 
 void Sprite::setColor(glm::vec4 inColor)

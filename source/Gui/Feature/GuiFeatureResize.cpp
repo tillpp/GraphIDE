@@ -12,10 +12,10 @@ GuiFeatureResize::GuiFeatureResize(GuiComponent *g)
 	  maxWidth(g, true,"resize.max.width"),
 	  maxHeight(g, false,"resize.max.height")
 {
-	//maxWidth.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
-	//maxHeight.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
-	maxHeight.setEquation(GuiEqPercent(100));
-	maxWidth.setEquation(GuiEqPercent(100));
+	maxWidth.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
+	maxHeight.setEquation(GuiEqPixel(std::numeric_limits<double>::max()));
+	//maxHeight.setEquation(GuiEqPercent(100));
+	//maxWidth.setEquation(GuiEqPercent(100));
 	
 }
 GuiFeatureResize::~GuiFeatureResize()
@@ -100,24 +100,28 @@ bool GuiFeatureResize::handleEvent(const GuiEvent &event)
 		if(scene&&isResizing){
 			auto mousepos = scene->getInverseViewProjection()*app().getGLNormalizedMousePosition();
 			if(resizingX==HIGH)
-				setAttribute(component->width,minWidth,maxWidth,mousepos.x-oldTotalXpos);
+				setAttribute(component->width,minWidth,maxWidth,mousepos.x-component->getTotalPosX());
 			if(resizingY==HIGH)
-				setAttribute(component->height,minHeight,maxHeight,mousepos.y-oldTotalYpos);
+				setAttribute(component->height,minHeight,maxHeight,mousepos.y-component->getTotalPosY());
 			if(resizingX==LOW){
-				double delta = mousepos.x-oldTotalXpos;
-				setAttribute(component->width,minWidth,maxWidth,oldWidth-delta);
+				double newposition = mousepos.x-(component->getParent()?component->getParent()->getTotalPosX():0);
+				
+				double rightSide = component->xpos+component->width;
 				setAttribute(component->xpos,
-					oldXpos+oldWidth-maxWidth,
-					oldXpos+oldWidth-minWidth,
-					oldXpos+delta);
+					rightSide-maxWidth,
+					rightSide-minWidth,
+					newposition);
+				setAttribute(component->width,minWidth,maxWidth,rightSide-newposition);
 			}
 			if(resizingY==LOW){
-				double delta = mousepos.y-oldTotalYpos;
-				setAttribute(component->height,minHeight,maxHeight,oldHeight-delta);
+				double newposition = mousepos.y-(component->getParent()?component->getParent()->getTotalPosY():0);
+				
+				double downSide = component->ypos+component->height;
 				setAttribute(component->ypos,
-					oldYpos+oldHeight-maxHeight,
-					oldYpos+oldHeight-minHeight,
-					oldYpos+delta);
+					downSide-maxHeight,
+					downSide-minHeight,
+					newposition);
+				setAttribute(component->height,minHeight,maxHeight,downSide-newposition);
 			}
 		}
 		return isResizing;

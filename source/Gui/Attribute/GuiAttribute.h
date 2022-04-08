@@ -59,6 +59,8 @@ public:
 	//Use this after moving after the GuiComponent has been moved [SLOW FUNCTION]
 	void connect();
 	
+
+	std::string debugInformation(std::string tabs="");
 protected:
 	/*
 		updates the depender of the dependencies.

@@ -63,8 +63,8 @@ bool GuiFeatureMove::handleEvent(const GuiEvent &event)
 			oldMousePositionX=mousepos.x;
 			oldMousePositionY=mousepos.y;
 
-			oldXpos = component->xpos;
-			oldYpos = component->ypos;
+			oldXpos = component->getTotalPosX();
+			oldYpos = component->getTotalPosY();
 		}
 		return isMoving;
 	}
@@ -82,8 +82,8 @@ bool GuiFeatureMove::handleEvent(const GuiEvent &event)
 			auto mousepos = scene->getInverseViewProjection()*app().getGLNormalizedMousePosition();
 			auto deltax = mousepos.x-oldMousePositionX;
 			auto deltay = mousepos.y-oldMousePositionY;
-			setAttribute(component->xpos,borderLeft,borderWidth-component->width,oldXpos+deltax);
-			setAttribute(component->ypos,borderTop,borderHeight-component->height,oldYpos+deltay);
+			setAttribute(component->xpos,borderLeft,borderWidth-component->width,oldXpos-component->getParent()->getTotalPosX()+deltax);
+			setAttribute(component->ypos,borderTop,borderHeight-component->height,oldYpos-component->getParent()->getTotalPosY()+deltay);
 		}
 		return isMoving;	
 	}else if (event.getType() == GuiEventType::ATTRIBUTECHANGE){

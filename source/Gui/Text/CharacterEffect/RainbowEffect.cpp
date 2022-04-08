@@ -17,6 +17,12 @@ void RainbowEffect::preGlyph(
 	bool& italic,
 	const TextSettings &ts)
 {
+	auto t = ((float)clock.getElapsedTime().asMilliseconds()+(ts.x+offset)*10)/1000.f*2*M_PI;
+	
+	color.r = (sin(t)           +1)/2;
+	color.g = (sin(t+M_PI*2  /3)+1)/2;
+	color.b = (sin(t+M_PI*2*2/3)+1)/2;
+	
 }
 void RainbowEffect::preDrawGlyph(
 	const sf::String &line,
@@ -26,8 +32,9 @@ void RainbowEffect::preDrawGlyph(
 	const TextSettings &ts,
 	const bool drawing)
 {
-	GLfloat dtcr = ts.getDisplayTextureCharacterRatio();
-	drawRect.y += sin(((float)clock.getElapsedTime().asMilliseconds()+drawRect.x*10)/1000.f*2*M_PI)*dtcr*ts.font->getLineSpacing()/2;
+	//GLfloat dtcr = ts.getDisplayTextureCharacterRatio();
+	//drawRect.y += sin(((float)clock.getElapsedTime().asMilliseconds()+drawRect.x*10)/1000.f*2*M_PI)*dtcr*ts.font->getLineSpacing()/2;
+
 }
 
 void RainbowEffect::postDrawGlyph(

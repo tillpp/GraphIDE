@@ -32,7 +32,7 @@ public:
 	void setTexture(Texture* inColor);
 	Texture* getTexture();	
 
-	virtual void draw(Shader& shader,Camera& camera,const double& x,const double& y)override;
+	virtual void drawInner(Shader& shader,Camera& camera,const double& x,const double& y)override;
 	virtual std::vector<GuiAttribute*> getGuiAttributes()override;
 
 	virtual std::string getType()override;

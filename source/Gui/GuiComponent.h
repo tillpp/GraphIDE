@@ -17,6 +17,7 @@ class Scene;
 #include "Attribute/GuiEqTexturePercent.h"
 #include "Attribute/GuiEqTextureHoldRatio.h"
 #include "Attribute/GuiEqSize.h"
+#include "Attribute/GuiEqTextPercent.h"
 
 #include "Feature/GuiFeature.h"
 #include "Feature/GuiFeatureResize.h"
@@ -56,8 +57,12 @@ public:
 	~GuiComponent();
 
 	virtual bool contain(const double& mousePositionX,const double& mousePositionY);
-	virtual void draw(Shader& shader,Camera& camera,const double& parentx = 0,const double& parenty = 0);
-	
+	void draw(Shader& shader,Camera& camera,const double& parentx = 0,const double& parenty = 0);
+private:
+	//only accessed by draw
+ 	virtual void drawInner(Shader& shader,Camera& camera,const double& parentx = 0,const double& parenty = 0);
+public:
+
 	GuiComponent* getParent();
 	const std::vector<GuiComponent*>& getChildren();
 	virtual std::vector<GuiAttribute*> getGuiAttributes();
@@ -96,5 +101,7 @@ public:
 	// ANIMATION
 	Animation* 	createAnimation(std::string name);
 	void		   useAnimation(std::string name);
+
+	std::string debugInformation(std::string tabs="");
 };
 
