@@ -8,6 +8,10 @@ TextUnit	TU		:TextComponent
 	has Text
 []TextReverse	TR		:TextComponent
 	has Text
+[]TextAlignment	TA		:TextComponent
+	has Text
+	enum{right,center,left} 
+	Note: 	TextSettings has a fullWidth propertie.
 []TextIcon	TI		:TextComponent
 	has Text
 []TextScript 	TS		:TextComponent
@@ -52,28 +56,29 @@ Characterspecificeffects CSE
 	clean TextUnit (Split code: underline,strikethough into class, extend "AfterApplier" baseclass)
 
 ## features
-Let Text scroll to the left,if the Text doesnt fit into it's boundrie
-Show Fulltext,when hovering above cut of text.
+[] Let Text scroll to the left,if the Text doesnt fit into it's boundrie
+[] Show Fulltext,when hovering above cut of text.
 
-hover event
-hover to animate: move character up
-hover to animate: color character
-hover to open tooltipwindow
-click event
+[] hover event
+[] hover to animate: move character up
+[] hover to animate: color character
+[] hover to open tooltipwindow
+[] click event
 
 # cursor stuff todo 
-cursor 
-cursor movement
-writing
-line too big and break line 
-delete (backspace,forward) 
-ctrl delete(backspace,forward)
-selecting text
-	shift
-	mouse select
-open stylewindow (to change style of selected text)
-copy ctrl+c
-paste ctrl+v
-cut ctrl+x
-undo ctrl+z
-redo ctrl+y
+[] cursor 
+[] cursor movement
+[] writing
+[] line too big and break line 
+[] delete (backspace,forward) 
+[] ctrl delete(backspace,forward)
+	[] selecting text
+	[] shift
+[] 	mouse select
+[] open stylewindow (to change style of selected text)
+[] copy ctrl+c
+[] paste ctrl+v
+[] cut ctrl+x
+[] undo ctrl+z
+[] redo ctrl+y
+

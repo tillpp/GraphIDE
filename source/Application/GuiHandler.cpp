@@ -29,33 +29,35 @@ void GuiHandler::init(Application* app){
 	mesh.setSettingRead(1,2,false,5,3);
 	mutex.unlock();
 
+	
 	//sprite.setTexture(TextureManager::loadFromFile("res/texture/background.png"));
 	sprite.width.setEquation(GuiEqPercent(100));
 	sprite.height.setEquation(GuiEqPercent(100));
+	
 	sprite.texBoundHeight.setEquation(GuiEqSize(100));
 	sprite.texBoundWidth.setEquation(GuiEqSize(100));
 	sprite.texBoundXpos.setEquation(GuiEqSize(-50));
 	sprite.setColor(glm::vec4(227.f/255, 192.f/255, 104.f/255,1));
 
+	
 	// sprite.setFlipY(true);
 	// sprite.setFlipX(true);
 	
-	sprite2 = new Sprite;
-	sprite2->width.setEquation(GuiEqPixel(50));
-	sprite2->height.setEquation(GuiEqPixel(50));
-	sprite2->setColor(glm::vec4(1,0,0,1));
-
-	sprite2->xpos.setEquation(GuiEqSub(GuiEqPercent(100),GuiEqPixel(50)));
-	sprite2->ypos.setEquation(GuiEqPixel(0));
-
 	scene.add(&sprite);
-	sprite.add(sprite2);
-	scene.add(&text);
-
+	sprite.add(&text);
+	text.ypos.overrideCachedValue(150);
+	text.width.setEquation(GuiEqPercent(100));
+	
 	sprite.addFeature<GuiFeatureResize>();
 	sprite.addFeature<GuiFeatureMove>();
-	sprite2->addFeature<GuiFeatureResize>();
-	sprite2->addFeature<GuiFeatureMove>();
+	//text.addFeature<GuiFeatureResize>();
+
+	/*
+		Update FlexEquations if child is added or removed 
+	*/
+	sprite.width.setEquation(GuiEqPixel(150));
+	sprite.height.setEquation(GuiEqFlex());
+
 
 	auto animation = sprite.createAnimation("test");
 	
@@ -63,7 +65,7 @@ void GuiHandler::init(Application* app){
 		new KeyFrameAttributeInformation(GuiEqPixel(50),[](double x)->double{return x;},"height")}));
 	animation->addKeyFrame(new KeyFrame(0.1,{
 	 	new KeyFrameAttributeInformation(GuiEqPixel(720),[](double x)->double{return x;},"height")}));
-    sprite.useAnimation("test");
+    //sprite.useAnimation("test");
 
 	time(&start);
 	//text.setUtf8(	  u8"w		ok");

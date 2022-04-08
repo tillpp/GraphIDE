@@ -8,7 +8,7 @@ void standartErrorCallback(LogType e, std::string msg)
 }
 std::recursive_mutex Log::mutex;
 void (*Log::fun)(LogType e, std::string data) = &standartErrorCallback;
-bool Log::isDebug = false;
+bool Log::isDebug = true;
 
 void Log::error(std::string msg){
 	mutex.lock();

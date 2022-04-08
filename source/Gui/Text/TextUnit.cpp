@@ -5,31 +5,37 @@
 TextUnit::TextUnit(std::string utf8text)
 	: text(sf::String::fromUtf8(utf8text.begin(), utf8text.end()))
 {
+	Log::debug("TextUnit::TextUnit ");
+	// Log::debug("TextUnit::TextUnit "+text.toAnsiString());
 }
 
 TextUnit::~TextUnit()
 {
 }
-void TextUnit::draw(Shader &shader, TextSettings &ts)
-{
+Mesh TextUnit::meshGenerate(Shader&shader,TextSettings& TextSettings){
+	
+}
+/*
+	returnvalue: offset
+*/
+
+void TextUnit::goThroughGlyphs(
+	GLfloat& offset,
+	bool CharacterEffectDrawingMode,
+	bool callBackAfterAdvance,
+	const TextSettings& ts,
+	const GLfloat& dtcr,
+	std::function<bool(const sf::Glyph& glyph,GLfloat& advance,int& index, glm::vec4& color,glm::vec4& drawRect,bool& italic)> F){
+
 	if (!ts.font)
 		Log::info("No font used.");
 
-	//displayTextureCharacterRatio
-	GLfloat dtcr = ts.getDisplayTextureCharacterRatio();
-
-	//draw background
-	drawBackground(shader, ts, dtcr);
-
 	//draw Text
-	ts.font->use(shader);
-	auto &line = text;
-	GLfloat offset = 0;
 
-	for (size_t i = 0; i < text.getSize(); i++)
+	for (int i = 0; i < text.getSize(); i++)
 	{
 		//tab
-		if (line[i] == '\t')
+		if (text[i] == '\t')
 		{
 			auto &glyph = ts.font->getGlyph(' ', ts.bold);
 
@@ -49,15 +55,12 @@ void TextUnit::draw(Shader &shader, TextSettings &ts)
 
 		/* 	CharacterEffect:preGlyph	*/
 		for (auto &e : ts.effects)
-			e->preGlyph(line, i, offset, color, bold,italic, ts);
-		auto &glyph = ts.font->getGlyph(line[i], bold);
+			e->preGlyph(text, i, offset, color, bold,italic, ts);
+
+		auto &glyph = ts.font->getGlyph(text[i], bold);
 
 		//kerning
-		offset += dtcr * ts.font->getKerning(line, i);
-
-		//draw letter
-		glUniform4fv(glGetUniformLocation(shader.getOpenGLID(), "textureRect"), 1, glm::value_ptr(ts.font->getRelativTextureRectGlyph(glyph)));
-		glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "color"), color.r, color.g, color.b, color.a);
+		offset += dtcr * ts.font->getKerning(text, i);
 
 		glm::vec4 drawRect;
 		drawRect.x = dtcr * glyph.bounds.left + offset + ts.x;
@@ -68,9 +71,45 @@ void TextUnit::draw(Shader &shader, TextSettings &ts)
 
 		/* 	CharacterEffect:preDraw	*/
 		for (auto &e : ts.effects)
-			e->preDrawGlyph(line, i, drawRect, advance, ts, true);
+			e->preDrawGlyph(text, i, drawRect, advance, ts, CharacterEffectDrawingMode);
 
 		//drawing letter
+		if(!callBackAfterAdvance)
+			if(!F(glyph,advance,i,color,drawRect,italic))
+				return;
+
+		/* 	CharacterEffect:postDraw	*/
+		for (auto &e : ts.effects)
+			e->postDrawGlyph(text, i, drawRect, advance, ts, CharacterEffectDrawingMode);
+
+		//offset advancing
+		offset += advance;
+		
+		//drawing letter
+		if(callBackAfterAdvance)
+			if(!F(glyph,advance,i,color,drawRect,italic))
+				return;
+	}
+}
+void TextUnit::draw(Shader &shader, TextSettings &ts)
+{
+	if (!ts.font)
+		Log::info("No font used.");
+
+	//displayTextureCharacterRatio
+	GLfloat dtcr = ts.getDisplayTextureCharacterRatio();
+
+	//draw background
+	drawBackground(shader, ts, dtcr);
+
+	//draw Text
+	ts.font->use(shader);
+	GLfloat offset = 0;
+	goThroughGlyphs(offset,true,false,ts,dtcr,[&](const sf::Glyph& glyph,GLfloat& advance,int& i, glm::vec4& color,glm::vec4& drawRect,bool& italic)->bool{
+
+		glUniform4fv(glGetUniformLocation(shader.getOpenGLID(), "textureRect"), 1, glm::value_ptr(ts.font->getRelativTextureRectGlyph(glyph)));
+		glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "color"), color.r, color.g, color.b, color.a);
+
 		glm::mat4 letterMatrix = glm::mat4(1.f);
 		letterMatrix = glm::translate(letterMatrix, glm::vec3(drawRect.x, drawRect.y + drawRect.w, 0.f));
 		if (italic)
@@ -78,14 +117,8 @@ void TextUnit::draw(Shader &shader, TextSettings &ts)
 		letterMatrix = glm::scale(letterMatrix, glm::vec3(drawRect.z, -drawRect.w, 1.f));
 
 		Mesh::rectangle().draw(shader, /*inMatrix * matrix */ letterMatrix);
-
-		/* 	CharacterEffect:postDraw	*/
-		for (auto &e : ts.effects)
-			e->postDrawGlyph(line, i, drawRect, advance, ts, true);
-
-		//offset advancing
-		offset += advance;
-	}
+		return true;
+	});
 
 	//Draw Underline
 	if (ts.underline)
@@ -159,58 +192,9 @@ int TextUnit::getWidth(const TextSettings &ts)
 	GLfloat dtcr = ts.getDisplayTextureCharacterRatio();
 
 	//draw Text
-	auto &line = text;
 	GLfloat offset = 0;
-
-	for (size_t i = 0; i < text.getSize(); i++)
-	{
-		//tab
-		if (line[i] == '\t')
-		{
-			auto &glyph = ts.font->getGlyph(' ', ts.bold);
-
-			float tabsize = glyph.advance * 4;
-			int tabs = (int)offset / tabsize;
-
-			if (tabsize * tabs == offset)
-				offset += tabsize;
-			else
-				offset = (tabs + 1) * tabsize;
-			continue;
-		}
-
-		bool bold = ts.bold;
-		bool italic = ts.italic;
-		glm::vec4 color = ts.textColor;
-
-		/* 	CharacterEffect:preGlyph	*/
-		for (auto &e : ts.effects)
-			e->preGlyph(line, i, offset, color, bold,italic, ts);
-
-		auto &glyph = ts.font->getGlyph(line[i], bold);
-
-		//kerning
-		offset += dtcr * ts.font->getKerning(line, i);
-
-		//draw letter
-		glm::vec4 drawRect;
-		drawRect.x = dtcr * glyph.bounds.left + offset + ts.x;
-		drawRect.y = dtcr * (glyph.bounds.top + ts.font->getBaseline() + ts.font->getLineSpacing()) + ts.y;
-		drawRect.z = dtcr * glyph.bounds.width;
-		drawRect.w = dtcr * glyph.bounds.height;
-		GLfloat advance = dtcr * glyph.advance;
-
-		/* 	CharacterEffect:preDraw	*/
-		for (auto &e : ts.effects)
-			e->preDrawGlyph(line, i, drawRect, advance, ts, false);
-		/* 	CharacterEffect:postDraw*/
-		for (auto &e : ts.effects)
-			e->postDrawGlyph(line, i, drawRect, advance, ts, false);
-
-		//offset advancing
-		offset += advance;
-	}
-	return offset;
+	goThroughGlyphs(offset,false,false,ts,dtcr,[](const sf::Glyph& glyph,GLfloat& advance,int& i, glm::vec4& color,glm::vec4& drawRect,bool& italic)->bool{return true;});
+	return std::ceil(offset);
 }
 int TextUnit::getHeight(const TextSettings &ts)
 {
@@ -223,4 +207,72 @@ int TextUnit::getYOffset(const TextSettings &ts)
 std::string TextUnit::getType()
 {
 	return "TextUnit";
+}
+
+std::vector<TextComponent*> TextUnit::split(int startoffset,const int maxLineWidth,const TextSettings &ts){
+	if (!ts.font)
+		Log::info("No font used.");
+
+	//displayTextureCharacterRatio
+	GLfloat dtcr = ts.getDisplayTextureCharacterRatio();
+
+	//draw Text
+	GLfloat offset = startoffset;
+	std::vector<TextComponent*> rv;
+	int potentialSoftBreakPoint = 0;
+
+	goThroughGlyphs(offset,false,true,ts,dtcr,[&](const sf::Glyph& glyph,GLfloat& advance,int& i, glm::vec4& color,glm::vec4& drawRect,bool& italic)->bool{
+		if(i>0)
+			if(sf::String(" ").find(text[i-1])!=sf::String::InvalidPos){
+				potentialSoftBreakPoint = i;
+			}
+		
+		
+		if(offset>maxLineWidth){
+			//soft split [Fits in this line]
+			if(potentialSoftBreakPoint!=0){
+				//is this the last bit?
+				if(text.getSize()<=potentialSoftBreakPoint){
+					rv.push_back(this);
+					return false;
+				}
+				//no
+				rv.push_back(new TextUnit(text.substring(0,potentialSoftBreakPoint)));
+				text.erase(0,potentialSoftBreakPoint);
+			}//soft split [doesnt fit this line,but in the next line]
+			else if(offset-startoffset<maxLineWidth){
+				
+			}//hard split
+			else{
+				//have atleast one letter at one line.
+				if(i==0)
+					i=1;
+				//is this the last bit?
+				if(text.getSize()<=i){
+					rv.push_back(this);
+					return false;
+				}
+				//this is not the last bit
+				rv.push_back(new TextUnit(text.substring(0,i)));	
+				text.erase(0,i);
+			}
+			i = -1;
+			offset = 0;
+			startoffset = 0;
+			potentialSoftBreakPoint = 0;
+		}
+		return true;
+	});
+	if(rv.size())
+		if(rv[rv.size()-1]!=this)
+			rv.push_back(this);
+	return rv;
+}
+bool TextUnit::merge(TextComponent* left){
+	if(left->getType()!=getType())
+		return false;
+	auto tu = (TextUnit*)left;
+	text+=tu->text;
+	// Log::debug("TextUnit::merge "+tu->text.toAnsiString()+" -> "+text.toAnsiString());
+	return true;
 }

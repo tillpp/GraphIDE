@@ -1,17 +1,23 @@
 #pragma once
-#include "MonoLineText.h"
+#include "TextBlock.h"
 
  class PolyLineText
  {
-	 std::vector<MonoLineText> lines;
- public:
-	PolyLineText();
+	
+	std::vector<TextBlock> blocks;
+
+public:
+	PolyLineText(sf::String text);
 	~PolyLineText();
 
 	void draw(Shader& shader,TextSettings ts);
 
-	virtual int getHeight(const TextSettings& ts);
-	virtual int getWidth(const TextSettings& ts);
+	int getHeight(const TextSettings& ts);
+	int getRealWidth(const TextSettings& ts);
+	int getInnerWidth(const TextSettings& ts);	
+
+	//goal width, adjusts its blocks
+	void adjust(const int width);
  };
  
  
