@@ -1,5 +1,5 @@
 #include "GuiEqMax.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 
 GuiEqMax::GuiEqMax(const GuiEquation& a,const GuiEquation& b)
 {

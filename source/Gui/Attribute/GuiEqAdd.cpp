@@ -1,5 +1,6 @@
 #include "GuiEquation.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
+
 
 GuiEqAdd::GuiEqAdd(const GuiEquation &a, const GuiEquation &b)
 {

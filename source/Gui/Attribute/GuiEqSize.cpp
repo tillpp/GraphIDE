@@ -1,5 +1,5 @@
 #include "GuiEqSize.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 
 GuiEqSize::GuiEqSize(double percent)
 {

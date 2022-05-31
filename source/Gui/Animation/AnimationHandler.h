@@ -28,5 +28,5 @@ public:
 	void updateAttribute();
 };
 
-#include "../GuiComponent.h"
+#include "../General/GuiComponent.h"
 #include "Animation.h"

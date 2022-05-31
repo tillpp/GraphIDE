@@ -1,5 +1,5 @@
 #include "GuiEqRatio.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 
 GuiEqRatio::GuiEqRatio(double ratio)
 {

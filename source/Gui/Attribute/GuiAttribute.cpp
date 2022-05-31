@@ -1,6 +1,6 @@
 #include "GuiAttribute.h"
 #include "GuiEquation.h"
-#include "../GuiComponent.h"
+#include "../General/GuiComponent.h"
 #include "../../Util/Log.h"
 
 GuiAttribute::GuiAttribute(GuiComponent *compo, bool xAxis,std::string name)

@@ -1,5 +1,5 @@
 #include "GuiEquation.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 #include "GuiAttribute.h"
 
 GuiEquation::GuiEquation(/* args */)

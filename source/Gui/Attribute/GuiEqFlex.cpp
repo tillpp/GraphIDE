@@ -1,5 +1,5 @@
 #include "GuiEqFlex.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 
 GuiEqFlex::GuiEqFlex(/* args */)
 {

@@ -1,5 +1,5 @@
 #include "GuiEqMin.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 
 GuiEqMin::GuiEqMin(const GuiEquation& a,const GuiEquation& b)
 {

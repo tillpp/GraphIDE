@@ -1,6 +1,6 @@
 #include "GuiFeature.h"
 #include "../Attribute/GuiAttribute.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 
 GuiFeature::GuiFeature(GuiComponent* g)
 {	

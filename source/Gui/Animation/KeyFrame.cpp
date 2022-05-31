@@ -1,5 +1,5 @@
 #include "KeyFrame.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 
 KeyFrame::KeyFrame(double duration,std::vector<KeyFrameAttributeInformation*> keyFrameAttributeInformation){
 	this->duration = duration;

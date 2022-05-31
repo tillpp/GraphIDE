@@ -1,5 +1,5 @@
 #include "GuiFeatureTextEdit.h"
-#include "../Text.h"
+#include "Gui/General/Text.h"
 #include "../../Util/Log.h"
 
 GuiFeatureTextEdit::GuiFeatureTextEdit(GuiComponent* g)

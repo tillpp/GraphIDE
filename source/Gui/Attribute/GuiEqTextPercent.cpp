@@ -1,5 +1,5 @@
 #include "GuiEqTextPercent.h"
-#include "Gui/Text.h"
+#include "Gui/General/Text.h"
 #include "Util/Log.h"
 
 GuiEqTextPercent::GuiEqTextPercent(double percent)

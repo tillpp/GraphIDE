@@ -2,8 +2,8 @@
 #include "OpenGL/Shader.h"
 #include "OpenGL/Camera.h"
 #include "OpenGL/Texture.h"
-#include "Text/TextComponent.h"
-#include "Text/PolyLineText.h"
+#include "Gui/Text/TextComponent.h"
+#include "Gui/Text/PolyLineText.h"
 
 class Text
 	:public GuiComponent

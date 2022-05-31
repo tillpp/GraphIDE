@@ -1,5 +1,5 @@
 #include "Text.h"
-#include "Text/TextUnit.h"
+#include "Gui/Text/TextUnit.h"
 #include "OpenGL/FontManager.h"
 
 Text::Text(/* args */):
@@ -21,7 +21,7 @@ Text::Text(/* args */):
 Text::~Text()
 {
 }
-#include "Text/CharacterEffect/RainbowEffect.h"
+#include "Gui/Text/CharacterEffect/RainbowEffect.h"
 #include <iostream>
 void Text::drawInner(Shader& shader,Camera& camera,const double& x,const double& y){
 	std::lock_guard<std::recursive_mutex> lock(mutex);

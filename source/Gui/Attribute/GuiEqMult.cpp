@@ -1,5 +1,5 @@
 #include "GuiEquation.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 
 GuiEqMult::GuiEqMult(const double& value,const GuiEquation& a)
 {

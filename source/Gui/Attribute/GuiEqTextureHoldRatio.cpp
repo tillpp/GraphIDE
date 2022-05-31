@@ -1,7 +1,7 @@
 #include "GuiEqTextureHoldRatio.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 #include "../../Util/Log.h"
-#include "../Sprite.h"
+#include "Gui/General/Sprite.h"
 #include "../../OpenGL/Texture.h"
 
 GuiEqTextureHoldRatio::GuiEqTextureHoldRatio()

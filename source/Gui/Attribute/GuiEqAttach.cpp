@@ -1,5 +1,5 @@
 #include "GuiEqAttach.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 
 GuiEqAttach::GuiEqAttach(const AttachType &at)
 {

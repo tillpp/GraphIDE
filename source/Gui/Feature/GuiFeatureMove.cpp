@@ -2,7 +2,7 @@
 #include "../Attribute/GuiAttribute.h"
 #include "../../Application/Application.h"
 #include "../Event/GuiEvent.h"
-#include "../Scene.h"
+#include "Gui/General/Scene.h"
 #include <limits>
 
 GuiFeatureMove::GuiFeatureMove(GuiComponent *g)

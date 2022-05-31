@@ -1,5 +1,5 @@
 #include "Scene.h"
-#include "Attribute/GuiEqPixel.h"
+#include "Gui/Attribute/GuiEqPixel.h"
 #include "Application/Application.h"
 
 

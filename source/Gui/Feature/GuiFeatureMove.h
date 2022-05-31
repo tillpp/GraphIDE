@@ -1,6 +1,6 @@
 #pragma once
 #include "GuiFeature.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 #include "../../Util/BoolTail.h"
 
 /*

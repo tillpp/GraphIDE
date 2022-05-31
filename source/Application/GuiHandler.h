@@ -6,9 +6,9 @@
 #include "OpenGL/Texture.h"
 
 #include "OpenGL/Recorder.h"
-#include "Gui/Sprite.h"
-#include "Gui/Text.h"
-#include "Gui/Scene.h"
+#include "Gui/General/Sprite.h"
+#include "Gui/General/Text.h"
+#include "Gui/General/Scene.h"
 /*
 	A GuiHandler is used to handle the Gui.
 */

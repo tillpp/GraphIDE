@@ -1,5 +1,5 @@
 #include "GuiEqPercent.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 #include <iostream>
 
 GuiEqPercent::GuiEqPercent(double percent)

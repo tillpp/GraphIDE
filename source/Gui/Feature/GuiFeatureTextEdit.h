@@ -2,7 +2,7 @@
 #include <vector>
 #include <mutex>
 #include "GuiFeature.h"
-#include "../GuiComponent.h"
+#include "Gui/General/GuiComponent.h"
 
 class GuiFeatureTextEdit: public GuiFeature
 {

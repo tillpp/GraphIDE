@@ -1,5 +1,5 @@
 #pragma once
-#include "../GuiComponent.h"
+#include "../General/GuiComponent.h"
 /*
 	This Class is useful for KeyFrame
 */
