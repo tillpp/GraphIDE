@@ -20,4 +20,6 @@ public:
 	virtual std::vector<GuiAttribute*> getGuiAttributes()override;
 
 	virtual std::string getType()override;	
+
+	int select_index(glm::vec2 mousePositionRelative2Text);
 };

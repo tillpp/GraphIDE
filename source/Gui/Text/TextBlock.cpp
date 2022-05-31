@@ -79,15 +79,22 @@ void TextBlock::goThroughLine(
 		ts.y += lineHeight;
 	}
 }
-void TextBlock::draw(Shader &shader, TextSettings ts)
+void TextBlock::draw(Shader &shader, TextSettings ts,const double x,const double y)
 {
 	int count = 0;
+	bool needMeshRegeneration = false;
+	if(lastWidth!=maxLineWidth)
+	{
+		lastWidth = maxLineWidth;
+		needMeshRegeneration = true;	
+	}
 	goThroughLine(ts,[&](int& i,int& j,int lineHeight){		
 		while (/*i < components.size() &&*/ i < j)
 		{
 			ts.textColor.g = count++%2;
 			auto &tc = components[i];
-			tc->draw(shader, ts);
+			tc->needMeshRegeneration = needMeshRegeneration;
+			tc->draw(shader, ts,x,y);
 			ts.x += tc->getWidth(ts);
 			i++;
 		}
@@ -148,4 +155,45 @@ int TextBlock::calculateLineHeight(TextSettings ts, int i, int j)
 			maxDown = tcDown;
 	}
 	return maxUp + maxDown;
+}
+
+//selectionBox
+int TextBlock::select_selectableCount(){
+	int rv = 0;
+	for(auto& x:components)
+		rv+=x->select_selectableCount(); //TODO, add 1 to rv every newline
+	return rv+1;
+}
+int TextBlock::select_index(glm::vec2 mousePositionRelative2Text,const TextSettings& ets){
+	TextSettings ts = ets;
+	
+	GLfloat xpos = ts.x;
+	GLfloat ypos = ts.y;
+	GLfloat width = getRealWidth(ts);
+	GLfloat height = getHeight(ts);
+	
+	if(not(xpos<=mousePositionRelative2Text.x && mousePositionRelative2Text.x<xpos+width
+         &&ypos<=mousePositionRelative2Text.y && mousePositionRelative2Text.y<ypos+height))
+		return -1;
+
+	int rv = 0;
+	goThroughLine(ts,[&](int& i,int& j,int lineHeight){
+		while (i < j)
+		{
+			auto &tc = components[i];
+			auto tcwidth = tc->getWidth(ts);
+			
+			if(ts.y<=mousePositionRelative2Text.y && mousePositionRelative2Text.y<ts.y+lineHeight
+			 &&ts.x<=mousePositionRelative2Text.x && mousePositionRelative2Text.x<ts.x+tcwidth){
+				rv += tc->select_index(mousePositionRelative2Text-glm::vec2(ts.x,ts.y),ts);
+				j = i = components.size();
+				break;
+			}
+			rv+=tc->select_selectableCount();
+			ts.x += tc->getWidth(ts);
+			i++;
+		}
+		rv++;
+	});
+	return rv;
 }

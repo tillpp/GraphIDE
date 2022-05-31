@@ -31,10 +31,10 @@ void Text::drawInner(Shader& shader,Camera& camera,const double& x,const double&
 
 	//textsettings
 	TextSettings ts;
-	ts.x = x + xpos;
-	ts.y = y + ypos;
+	// ts.x = x + xpos;
+	// ts.y = y + ypos;
 	ts.font = FontManager::getFont("arial.ttf");//SourceCodePro-Regular.ttf
-	
+
 	//update innerWidth & innerHeigth
 	innerWidth.overrideCachedValue(plt.getInnerWidth(ts));
 	innerHeight.overrideCachedValue(plt.getHeight(ts));
@@ -42,7 +42,16 @@ void Text::drawInner(Shader& shader,Camera& camera,const double& x,const double&
 	plt.adjust(width);
 
 	//draw
-	plt.draw(shader,ts);
+	plt.draw(shader,ts,x+xpos,y+ypos);
+}
+int Text::select_index(glm::vec2 mousePositionRelative2Text){
+	//textsettings
+	TextSettings ts;
+	// ts.x = x + xpos;
+	// ts.y = y + ypos;
+	ts.font = FontManager::getFont("arial.ttf");//SourceCodePro-Regular.ttf
+	
+	return plt.select_index(mousePositionRelative2Text,ts);
 }
 std::vector<GuiAttribute*> Text::getGuiAttributes(){
 	return GuiComponent::getGuiAttributes();

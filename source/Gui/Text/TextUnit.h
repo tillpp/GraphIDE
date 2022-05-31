@@ -18,11 +18,12 @@ class TextUnit
 {
 	sf::String text;
 
-	void drawBackground(Shader&shader,TextSettings& TextSettings,GLfloat displayTextureCharacterRatio);
-	void drawUnderline(Shader&shader,TextSettings& TextSettings,GLfloat displayTextureCharacterRatio,GLfloat offset);
-	void drawStrikethrough(Shader&shader,TextSettings& TextSettings,GLfloat displayTextureCharacterRatio,GLfloat offset);
+	void drawBackground(Shader&shader,TextSettings& TextSettings,glm::mat4& matrix,GLfloat displayTextureCharacterRatio);
+	void drawUnderline(Shader&shader,TextSettings& TextSettings,glm::mat4& matrix,GLfloat displayTextureCharacterRatio,GLfloat offset);
+	void drawStrikethrough(Shader&shader,TextSettings& TextSettings,glm::mat4& matrix,GLfloat displayTextureCharacterRatio,GLfloat offset);
 	
-	Mesh meshGenerate(Shader&shader,TextSettings& TextSettings);
+	Mesh mesh;
+	void meshGenerate(Shader&shader,TextSettings& TextSettings);
 	
 	/*
 		Goes through all the Glyphs,
@@ -37,12 +38,11 @@ class TextUnit
 		const GLfloat& displayTextureCharacterRatio,
 		std::function<bool(const sf::Glyph& glyph,GLfloat& advance,int& index,glm::vec4& color,glm::vec4& drawRect,bool& italic)> F);
 	
-	friend TextUnit;
 public:
 	TextUnit(std::string utf8text);
 	~TextUnit();
 
-	virtual void draw(Shader&shader,TextSettings& TextSettings)override;
+	virtual void draw(Shader&shader,TextSettings& TextSettings,const double x,const double y)override;
 
 	
 
@@ -54,4 +54,8 @@ public:
 
 	virtual std::vector<TextComponent*> split(int offset,const int width,const TextSettings &ts);
 	virtual bool merge(TextComponent* left);
+
+	//selectionBox
+	virtual int select_selectableCount()override;//amount of selectable objects.
+	virtual int select_index(glm::vec2 mousePositionRelative2TC,const TextSettings& ts)override;//index 
 };

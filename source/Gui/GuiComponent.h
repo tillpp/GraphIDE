@@ -3,6 +3,7 @@ class Scene;
 #include <mutex>
 #include "OpenGL/Shader.h"
 #include "OpenGL/Camera.h"
+#include "OpenGL/Mesh.h"
 #include "Attribute/GuiAttribute.h"
 #include "Attribute/GuiEqPixel.h"
 #include "Attribute/GuiEqPercent.h"
@@ -22,6 +23,7 @@ class Scene;
 #include "Feature/GuiFeature.h"
 #include "Feature/GuiFeatureResize.h"
 #include "Feature/GuiFeatureMove.h"
+#include "Feature/GuiFeatureTextEdit.h"
 #include "Event/GuiEvent.h"
 
 #include "Util/BoolTail.h"

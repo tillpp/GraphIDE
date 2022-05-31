@@ -10,7 +10,7 @@ public:
 	PolyLineText(sf::String text);
 	~PolyLineText();
 
-	void draw(Shader& shader,TextSettings ts);
+	void draw(Shader& shader,TextSettings ts,const double x,const double y);
 
 	int getHeight(const TextSettings& ts);
 	int getRealWidth(const TextSettings& ts);
@@ -18,6 +18,11 @@ public:
 
 	//goal width, adjusts its blocks
 	void adjust(const int width);
+
+	//selectionBox
+	int select_selectableCount();//amount of selectable objects.
+	int select_index(glm::vec2 mousePositionRelative2Text,TextSettings ts);//index 
+
  };
  
  

@@ -47,7 +47,8 @@ void GuiHandler::init(Application* app){
 	sprite.add(&text);
 	text.ypos.overrideCachedValue(150);
 	text.width.setEquation(GuiEqPercent(100));
-	
+	text.addFeature<GuiFeatureTextEdit>();
+
 	sprite.addFeature<GuiFeatureResize>();
 	sprite.addFeature<GuiFeatureMove>();
 	//text.addFeature<GuiFeatureResize>();
@@ -55,7 +56,7 @@ void GuiHandler::init(Application* app){
 	/*
 		Update FlexEquations if child is added or removed 
 	*/
-	sprite.width.setEquation(GuiEqPixel(150));
+	sprite.width.setEquation(GuiEqPixel(500));
 	sprite.height.setEquation(GuiEqFlex());
 
 

@@ -17,9 +17,9 @@ PolyLineText::PolyLineText(sf::String text){
  {
  }
  
- void PolyLineText::draw(Shader& shader,TextSettings ts){
+ void PolyLineText::draw(Shader& shader,TextSettings ts,const double x,const double y){
 	for(auto& b:blocks){
-		b.draw(shader,ts);
+		b.draw(shader,ts,x,y);
 		ts.y += b.getHeight(ts);
 	}
  }
@@ -51,4 +51,38 @@ void PolyLineText::adjust(const int width){
 	for(auto& b:blocks){
 		b.maxLineWidth = width;
 	}
+}
+int PolyLineText::select_selectableCount(){
+	int rv = 0;
+	for(auto& b:blocks){
+		rv+=b.select_selectableCount();
+	}
+	return rv;
+}
+int PolyLineText::select_index(glm::vec2 mousePositionRelative2Text,TextSettings ts){
+	int height = getHeight(ts);
+	int width = getRealWidth(ts);
+
+	//not in this text.
+	if(not(ts.x<=mousePositionRelative2Text.x && mousePositionRelative2Text.x<ts.x+width
+	     &&ts.y<=mousePositionRelative2Text.y && mousePositionRelative2Text.y<ts.y+height)){
+		 return -1;
+	}
+
+	int rv = 0;
+
+	for(auto& b:blocks){
+		auto blockheight = b.getHeight(ts);
+		auto blockwidth = getRealWidth(ts);
+		
+		if(ts.x<=mousePositionRelative2Text.x && mousePositionRelative2Text.x<ts.x+blockwidth
+		 &&ts.y<=mousePositionRelative2Text.y && mousePositionRelative2Text.y<ts.y+blockheight){
+			int indexInTB = b.select_index(mousePositionRelative2Text,ts);
+			rv += (indexInTB==-1)?b.select_selectableCount():indexInTB;
+			return rv;
+		}
+		rv += b.select_selectableCount();
+		ts.y += b.getHeight(ts);
+	}
+	return rv;
 }

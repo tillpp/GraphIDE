@@ -12,7 +12,53 @@ TextUnit::TextUnit(std::string utf8text)
 TextUnit::~TextUnit()
 {
 }
-Mesh TextUnit::meshGenerate(Shader&shader,TextSettings& TextSettings){
+void TextUnit::meshGenerate(Shader&shader,TextSettings& ts){
+	if (!ts.font)
+		Log::info("No font used.");
+
+	//displayTextureCharacterRatio
+	GLfloat dtcr = ts.getDisplayTextureCharacterRatio();
+
+	
+	int GlyphCount = 0;
+	std::vector<GLfloat> vertexArray;
+
+	//draw Text
+	GLfloat offset = 0;
+	goThroughGlyphs(offset,true,false,ts,dtcr,[&](const sf::Glyph& glyph,GLfloat& advance,int& i, glm::vec4& color,glm::vec4& drawRect,bool& italic)->bool{
+		
+		//textureRect
+		auto textureRect = ts.font->getRelativTextureRectGlyph(glyph);
+		
+		glm::mat4 letterMatrix = glm::mat4(1.f);
+		letterMatrix = glm::translate(letterMatrix, glm::vec3(drawRect.x, drawRect.y + drawRect.w, 0.f));
+		if (italic)
+			letterMatrix[1] += glm::vec4(-0.15, 0, 0, 0); //change for italic
+		letterMatrix = glm::scale(letterMatrix, glm::vec3(drawRect.z, -drawRect.w, 1.f));
+
+		glm::vec4 x = glm::vec4(0,0,0,1); 
+		
+		const std::vector<std::pair<bool,bool>> coords = {{0,0},{0,1},{1,1},{0,0},{1,0},{1,1}};
+		for(auto c:coords){
+			x = letterMatrix*glm::vec4(c.first,c.second,0,1);
+			//cords
+			vertexArray.push_back(x.x);
+			vertexArray.push_back(x.y);
+			vertexArray.push_back(x.z);
+			//texture
+			vertexArray.push_back(textureRect.x+c.first*textureRect.z);
+			vertexArray.push_back(textureRect.y+(!c.second)*textureRect.w);
+
+		}
+		GlyphCount++;
+		return true;
+	});
+	if(!mesh.isCreated())
+		mesh.create();
+
+	mesh.LoadFromVertexArray(vertexArray,GlyphCount*6);
+	mesh.setSettingRead(0,3,false,5,0);
+	mesh.setSettingRead(1,2,false,5,3);
 	
 }
 /*
@@ -91,8 +137,23 @@ void TextUnit::goThroughGlyphs(
 				return;
 	}
 }
-void TextUnit::draw(Shader &shader, TextSettings &ts)
+void TextUnit::draw(Shader &shader, TextSettings &ts,const double x,const double y)
 {
+	auto matrix = glm::translate(glm::mat4(1.f), glm::vec3(x, y, 1));
+	
+	//performant drawing
+	if(!mesh.isCreated()||needMeshRegeneration){
+	 	meshGenerate(shader,ts);
+	 	needMeshRegeneration = false;
+	}
+	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "textureRect"),0,0,1,1);
+	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "color"), ts.textColor.r, ts.textColor.g, ts.textColor.b, ts.textColor.a);
+
+	ts.font->use(shader);
+
+	mesh.draw(shader,matrix);
+	return;
+
 	if (!ts.font)
 		Log::info("No font used.");
 
@@ -100,7 +161,7 @@ void TextUnit::draw(Shader &shader, TextSettings &ts)
 	GLfloat dtcr = ts.getDisplayTextureCharacterRatio();
 
 	//draw background
-	drawBackground(shader, ts, dtcr);
+	drawBackground(shader, ts, matrix,dtcr);
 
 	//draw Text
 	ts.font->use(shader);
@@ -116,18 +177,18 @@ void TextUnit::draw(Shader &shader, TextSettings &ts)
 			letterMatrix[1] += glm::vec4(-0.15, 0, 0, 0); //change for italic
 		letterMatrix = glm::scale(letterMatrix, glm::vec3(drawRect.z, -drawRect.w, 1.f));
 
-		Mesh::rectangle().draw(shader, /*inMatrix * matrix */ letterMatrix);
+		Mesh::rectangle().draw(shader, /*inMatrix */ matrix * letterMatrix);
 		return true;
 	});
 
 	//Draw Underline
 	if (ts.underline)
-		drawUnderline		(shader, ts, dtcr,offset);
+		drawUnderline		(shader, ts,matrix, dtcr,offset);
 	//Draw Strikethrough
 	if (ts.strikethrough)
-		drawStrikethrough	(shader, ts, dtcr,offset);
+		drawStrikethrough	(shader, ts,matrix, dtcr,offset);
 }
-void TextUnit::drawBackground(Shader &shader, TextSettings &ts, GLfloat dtcr)
+void TextUnit::drawBackground(Shader &shader, TextSettings &ts,glm::mat4& matrix, GLfloat dtcr)
 {
 	Texture::whiteTexture().use(0, shader, "texture1");
 	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "textureRect"), 0, 0, 1, 1);
@@ -142,9 +203,9 @@ void TextUnit::drawBackground(Shader &shader, TextSettings &ts, GLfloat dtcr)
 	letterMatrix = glm::translate(letterMatrix, glm::vec3(xpos, ypos + height, 0.f));
 	letterMatrix = glm::scale(letterMatrix, glm::vec3(width, -height, 1.f));
 
-	Mesh::rectangle().draw(shader, /*inMatrix * matrix */ letterMatrix);
+	Mesh::rectangle().draw(shader, /*inMatrix */ matrix * letterMatrix);
 }
-void TextUnit::drawUnderline(Shader &shader, TextSettings &ts, GLfloat dtcr,GLfloat offset)
+void TextUnit::drawUnderline(Shader &shader, TextSettings &ts,glm::mat4& matrix, GLfloat dtcr,GLfloat offset)
 {
 	Texture::whiteTexture().use(0, shader, "texture1");
 	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "textureRect"), 0, 0, 1, 1);
@@ -161,9 +222,9 @@ void TextUnit::drawUnderline(Shader &shader, TextSettings &ts, GLfloat dtcr,GLfl
 		letterMatrix[1] += glm::vec4(-0.15, 0, 0, 0); //change for italic
 	letterMatrix = glm::scale(letterMatrix, glm::vec3(width, -height, 1.f));
 
-	Mesh::rectangle().draw(shader, /*inMatrix * matrix */ letterMatrix);
+	Mesh::rectangle().draw(shader, /*inMatrix */ matrix * letterMatrix);
 }
-void TextUnit::drawStrikethrough(Shader &shader, TextSettings &ts,GLfloat dtcr,GLfloat offset)
+void TextUnit::drawStrikethrough(Shader &shader, TextSettings &ts,glm::mat4& matrix,GLfloat dtcr,GLfloat offset)
 {
 	Texture::whiteTexture().use(0, shader, "texture1");
 	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "textureRect"), 0, 0, 1, 1);
@@ -180,7 +241,7 @@ void TextUnit::drawStrikethrough(Shader &shader, TextSettings &ts,GLfloat dtcr,G
 		letterMatrix[1] += glm::vec4(-0.15, 0, 0, 0); //change for italic
 	letterMatrix = glm::scale(letterMatrix, glm::vec3(width, -height, 1.f));
 
-	Mesh::rectangle().draw(shader, /*inMatrix * matrix */ letterMatrix);
+	Mesh::rectangle().draw(shader, /*inMatrix */ matrix*letterMatrix);
 }
 
 int TextUnit::getWidth(const TextSettings &ts)
@@ -276,3 +337,30 @@ bool TextUnit::merge(TextComponent* left){
 	// Log::debug("TextUnit::merge "+tu->text.toAnsiString()+" -> "+text.toAnsiString());
 	return true;
 }
+int TextUnit::select_selectableCount(){
+	return text.getSize();
+}
+int TextUnit::select_index(glm::vec2 mousePositionRelative2TC,const TextSettings& ts){
+	GLfloat dtcr = ts.getDisplayTextureCharacterRatio();
+	GLfloat ypos = ts.y;
+	GLfloat height = dtcr * ts.font->getLineSpacing();
+
+	if(not(ypos<=mousePositionRelative2TC.y&&mousePositionRelative2TC.y<ypos+height))
+		return -1;
+	int rv = text.getSize();
+
+	GLfloat offset = 0;
+	goThroughGlyphs(offset,false,true,ts,dtcr,[&](const sf::Glyph& glyph,GLfloat& advance,int& i, glm::vec4& color,glm::vec4& drawRect,bool& italic)->bool{
+		
+		GLfloat xpos = drawRect.x+ts.x;
+		GLfloat width = drawRect.z;
+		
+		if(mousePositionRelative2TC.x<xpos+width){
+			rv=(mousePositionRelative2TC.x<xpos+width/2)?i:i+1;
+			return false;
+		}
+		return true;
+	});
+
+	return rv;
+} 
