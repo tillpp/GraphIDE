@@ -33,6 +33,10 @@ class Mesh
 
 	bool alreadyCreated = false;
 public:
+	Mesh(Mesh&);
+	Mesh();
+	~Mesh();
+
 	void move(glm::mat4 change);
 	void set(glm::mat4 change);
 	
@@ -44,6 +48,7 @@ public:
 
 	bool isCreated();
 	std::recursive_mutex& getMutex();
+	
 
 	static Mesh& rectangle();
 private:

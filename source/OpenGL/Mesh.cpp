@@ -16,7 +16,50 @@ void openGLError()
 	openGLErrorMessage(GL_STACK_OVERFLOW)
 }
 
+Mesh::Mesh(){
+}
+Mesh::Mesh(Mesh& mesh){
+	//data
+	mutex.lock();
+	mesh.mutex.lock();
 
+	nonAutoFaces = mesh.nonAutoFaces;
+	mEBO = mesh.mEBO;
+	mVAO = mesh.mVAO;
+	mVBO = mesh.mVBO;
+
+	mOrigin   = mesh.mOrigin;
+ 	mPosition = mesh.mPosition;
+ 	mRotation = mesh.mRotation;
+ 	mScale 	  = mesh.mScale;
+
+ 	mMatrix = mesh.mMatrix;
+	mVertexCount = mesh.mVertexCount;
+ 	
+	alreadyCreated = mesh.alreadyCreated;
+
+	mesh.nonAutoFaces = 0;
+ 	mesh.mVertexCount = 0;
+	mesh.alreadyCreated = false;
+
+	mesh.mutex.unlock();
+	mutex.unlock();
+}
+Mesh::~Mesh(){
+	mutex.lock();
+	if(alreadyCreated){
+		alreadyCreated = false;
+		//delete Vertex Buffer Object
+		glDeleteBuffers(1, &mVBO);
+		//delete Vertex Array Object
+		glDeleteVertexArrays(1, &mVAO);
+		if(nonAutoFaces)
+			glDeleteBuffers(1, &mEBO);
+		nonAutoFaces = 0;
+		mVertexCount = 0;
+	}
+	mutex.unlock();
+}
 void Mesh::move(glm::mat4 change){
 	mutex.lock();
 	mMatrix = change*mMatrix;

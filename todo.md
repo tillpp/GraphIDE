@@ -13,7 +13,9 @@ Animation
 	repeat
 	just stop	
 
-
+#MESH!
+	destructor should delete VAO and other stuff,
+	move constructor 
 
 #Text
  
