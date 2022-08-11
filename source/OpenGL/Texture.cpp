@@ -6,9 +6,11 @@
 Texture::Texture(/* args */)
 {
 }
-
 Texture::~Texture()
 {
+	remove();
+}
+void Texture::remove(){
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	if (textureID!=(GLuint)-1)
 		glDeleteTextures(1,&textureID);

@@ -74,7 +74,7 @@ void Scene::updateHover(const double& mousex,const double& mousey){
 }
 
 void Scene::updateClick(const double& mousex,const double& mousey){
-	if(app().getKey(sf::Mouse::Left)==KeyState::clicked){
+	if(app().getKey(sf::Mouse::Left)==BoolTail::START){
 		
 		if(hovered){
 			//trigger click [direct]
@@ -92,7 +92,7 @@ void Scene::updateClick(const double& mousex,const double& mousey){
 }
 void Scene::updateSelecting(){
 	
-	if(app().getKey(sf::Mouse::Left)==KeyState::clicked){
+	if(app().getKey(sf::Mouse::Left)==BoolTail::START){
 		auto lastSelected = selected;
 		selected = hovered;
 

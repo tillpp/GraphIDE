@@ -16,9 +16,9 @@ Application::Application(std::string title,size_t width,size_t height)
 
 	//initializing the inputvariables
 	for (size_t i = 0; i < sf::Keyboard::KeyCount; i++)
-		keyboardData[i]=0; 
+		keyboardData[i].update(false); 
 	for (size_t i = 0; i < sf::Mouse::ButtonCount; i++)
-		mouseKeyData[i]=0; 
+		mouseKeyData[i].update(false); 
 	
 	thread = std::thread(&Application::run, this,title,width,height);
 	
@@ -90,13 +90,13 @@ void Application::run(std::string title,size_t width,size_t height)
 		}
 		window.display();
 	}
-	exit(0);
 	mutex.unlock();
 }
 void Application::close(){
 	mutex.lock();
+	// >> All textures have to be removed before OpenGL Context is destroyed.
+	Texture::whiteTexture().remove();
 	window.close();
-	exit(0);
 	mutex.unlock();
 }
 void Application::registerFeature(ApplicationFeature* feature){
@@ -132,19 +132,22 @@ sf::String Application::getText(){
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	return text; 
 }
-KeyState Application::getKey(sf::Keyboard::Key key){
+BoolTail::BoolTailMode Application::getKey(sf::Keyboard::Key key){
 	std::lock_guard<std::recursive_mutex> lock(mutex);
-	return KeyState(keyboardData[key]);
+	return keyboardData[key];
 }
-KeyState Application::getKey(sf::Mouse::Button button){
+BoolTail::BoolTailMode Application::getKey(sf::Mouse::Button button){
 	std::lock_guard<std::recursive_mutex> lock(mutex);
-	return KeyState(mouseKeyData[button]);
+	return mouseKeyData[button];
 }
 void Application::updateInput()
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	sf::Event event;
 	text = "";
+
+	static BoolTail firstKeyStroke = true;
+
 	while (window.pollEvent(event))
 	{
 		if (event.type == sf::Event::Closed)
@@ -156,46 +159,73 @@ void Application::updateInput()
 		if(event.type == sf::Event::TextEntered){
 			 text += event.text.unicode;
 		}
+		// //Fixing weired SFML Bug, where first letter isnt detected
+		// if(firstKeyStroke)
+		// 	if(event.type == sf::Event::KeyPressed)
+		// 	{
+		// 		int i = event.key.code;
+		// 		keyboardData[i].update(true);
+		// 		firstKeyStroke = false;
+		// 		Log::info("keyboard button "+std::to_string(i)+" pressed [first]");
+				
+		// 	}
 	}
+	// if(firstKeyStroke == BoolTail::RELEASE)
+	// 	return;
 	
+	keyboardTextMove = false;
 	//keyboard
 	for (size_t i = 0; i < sf::Keyboard::KeyCount; i++)
 	{
 		/*	update lastkey and key	*/
-		keyboardData[i]=keyboardData[i]>>1; 
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(i)))
-			keyboardData[i]|=0x02;
-		else 
-			keyboardData[i]&=~(0x02);
+		keyboardData[i].update(sf::Keyboard::isKeyPressed(sf::Keyboard::Key(i)));
 		
 		/*	pressed and released	*/
-		if(keyboardData[i]==2){ //pressed
+		if(keyboardData[i]==BoolTail::START){ //pressed
+			KeyboardTextDelay = 500;
+			keyboardTextMove = true;
+			keyboardTextClock.restart();
+			
 			Log::info("keyboard button "+std::to_string(i)+" pressed");
 		}
-		if(keyboardData[i]==1){ //released
+		if(keyboardData[i]==BoolTail::RELEASE){ //released
 			Log::info("keyboard button "+std::to_string(i)+" released");
 		}
 	}
+	if(keyboardTextClock.getElapsedTime().asMilliseconds() > KeyboardTextDelay){
+		KeyboardTextDelay = 50;
+		keyboardTextMove = true;
+		keyboardTextClock.restart();
+	}
+	
 	//Mouse
 	for (size_t i = 0; i < sf::Mouse::ButtonCount; i++)
 	{
 		/*	update lastkey and key	*/
-		mouseKeyData[i]=mouseKeyData[i]>>1; 
-		if(sf::Mouse::isButtonPressed(sf::Mouse::Button(i)))
-			mouseKeyData[i]|=0x02;
-		else 
-			mouseKeyData[i]&=~(0x02);
+		mouseKeyData[i].update(sf::Mouse::isButtonPressed(sf::Mouse::Button(i)));
 
 		/*	pressed and released	*/
-		if(mouseKeyData[i]==2){ //pressed
+		if(mouseKeyData[i]==BoolTail::START){ //pressed
 			Log::info("Mouse button "+std::to_string(i)+" pressed");
 		}
-		if(mouseKeyData[i]==1){ //released
+		if(mouseKeyData[i]==BoolTail::RELEASE){ //released
 			Log::info("Mouse button "+std::to_string(i)+" release");
 		}
+	}
+	if(mouseKeyData[sf::Mouse::Left]==BoolTail::START){
+		consecutiveLeftMouseClicks.tick();
 	}
 }
 
 void Application::setCursor(const sf::Cursor& c){
+	std::lock_guard<std::recursive_mutex> lock(mutex);
 	window.setMouseCursor(c);
+}
+unsigned int Application::getConsecutiveLeftMouseClicks(){
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	return consecutiveLeftMouseClicks.getCount();
+}
+bool Application::isKeyboardTextMove(){
+	std::lock_guard<std::recursive_mutex> lock(mutex);
+	return keyboardTextMove;
 }

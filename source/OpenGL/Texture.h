@@ -30,6 +30,7 @@ public:
 	Texture();
 	Texture(Texture&)=delete;
 	~Texture();
+	void remove();
 
 	void LoadFromFile(sf::String inPath, TextureSettings inSettings = TextureSettings());
 	void LoadFromTexture(sf::Texture inTexture, TextureSettings inSettings = TextureSettings());

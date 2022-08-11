@@ -20,6 +20,7 @@ protected:
 	*/
 	unsigned char state = 0;
 public:
+	BoolTail(bool value = false);
 	void update(bool value);
 	operator bool();
 	operator BoolTailMode();

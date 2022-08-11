@@ -27,8 +27,8 @@ bool GuiFeatureTextEdit::handleEvent(const GuiEvent& event){
 			return false;
 		}
 		Text* text = (Text*)component;
-		glm::vec2 mousePositionRelative2Text(e->mousexInGui,e->mouseyInGui);
-		Log::info(std::to_string(text->select_index(mousePositionRelative2Text)));
+		//glm::vec2 mousePositionRelative2Text(e->mousexInGui,e->mouseyInGui);
+		//Log::info("CursorSlotPosition:"+std::to_string(text->select_index(mousePositionRelative2Text)));
 	}
 	return false;
 }

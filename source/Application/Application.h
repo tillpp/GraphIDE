@@ -12,12 +12,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-enum KeyState
-{
-	release = 1,
-	clicked = 2,
-	pressed = 3
-};
+#include "Util/BoolTail.h"
+#include "Util/ConsecutiveTickCounter.h"
+
 class Application
 {
 	//thread
@@ -35,10 +32,14 @@ class Application
 		0x01	last state data
 		0x02		 state data
 	*/
-	unsigned char keyboardData[sf::Keyboard::KeyCount];
-	unsigned char mouseKeyData[sf::Mouse::ButtonCount];
+	BoolTail keyboardData[sf::Keyboard::KeyCount];
+	BoolTail mouseKeyData[sf::Mouse::ButtonCount];
+	ConsecutiveTickCounter consecutiveLeftMouseClicks = 250;
 	sf::String text = "";
-	void updateInput();
+	void updateInput();	
+	sf::Clock keyboardTextClock;
+	sf::Int32 KeyboardTextDelay = 1000;
+	bool	  keyboardTextMove  = false;
 public:
 	Application(std::string title="",size_t width=1280,size_t height=720);
 	~Application();
@@ -53,8 +54,10 @@ public:
 	glm::vec4 getGLNormalizedMousePosition();
 
 	sf::String getText();
-	KeyState getKey(sf::Mouse::Button);
-	KeyState getKey(sf::Keyboard::Key);
+	BoolTail::BoolTailMode getKey(sf::Mouse::Button);
+	BoolTail::BoolTailMode getKey(sf::Keyboard::Key);
+	unsigned int getConsecutiveLeftMouseClicks();
+	bool		 isKeyboardTextMove();
 
 	void setCursor(const sf::Cursor&);
 };

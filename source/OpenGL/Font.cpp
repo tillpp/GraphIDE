@@ -12,14 +12,18 @@ Texture &Font::getTexture()
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	return texture;
 }
-
+bool Font::GlyphMetaData::operator<(const GlyphMetaData& other)const{
+	if(boldness == other.boldness)
+		return character < other.character;
+	return boldness;
+}
 const sf::Glyph &Font::getGlyph(unsigned int c,bool bold)
 {
 	std::lock_guard<std::recursive_mutex> lock(mutex);
-	if(glyphs.find(c)==glyphs.end()){
+	if(glyphs.find({c,bold})==glyphs.end()){
 		font.getGlyph(c, characterSize, bold, 0);
 		texture.LoadFromTexture(font.getTexture(characterSize));
-		glyphs.insert(c);
+		glyphs.insert({c,bold});
 	}
 	return font.getGlyph(c, characterSize, bold, 0);
 }
@@ -32,7 +36,7 @@ glm::vec4 Font::getRelativTextureRectGlyph(const sf::Glyph& glyph){
 	return textureRect;
 }
 GLfloat Font::getBaseline()
-{ //from top to the baseline
+{ //from baseline to the bottom
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	return 1 - (font.getUnderlinePosition(characterSize) + font.getUnderlineThickness(characterSize)*2);
 }

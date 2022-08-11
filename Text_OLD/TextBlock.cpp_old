@@ -10,6 +10,8 @@ TextBlock::~TextBlock()
 {
 }
 
+//#################
+
 void TextBlock::goThroughLine(
 	TextSettings& ts,
 	std::function<void(int& i,int& j,int lineHeight)> F){
@@ -100,6 +102,10 @@ void TextBlock::draw(Shader &shader, TextSettings ts,const double x,const double
 		}
 	});
 }
+
+//#################
+
+
 int TextBlock::getHeight(const TextSettings& ets)
 {
 	TextSettings ts = ets;

@@ -13,3 +13,6 @@ BoolTail::operator bool(){
 BoolTail::operator BoolTailMode(){
 	return BoolTailMode(state);
 }
+BoolTail::BoolTail(bool value){
+	update(value);
+}

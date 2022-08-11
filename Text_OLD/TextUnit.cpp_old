@@ -142,17 +142,17 @@ void TextUnit::draw(Shader &shader, TextSettings &ts,const double x,const double
 	auto matrix = glm::translate(glm::mat4(1.f), glm::vec3(x, y, 1));
 	
 	//performant drawing
-	if(!mesh.isCreated()||needMeshRegeneration){
-	 	meshGenerate(shader,ts);
-	 	needMeshRegeneration = false;
-	}
-	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "textureRect"),0,0,1,1);
-	glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "color"), ts.textColor.r, ts.textColor.g, ts.textColor.b, ts.textColor.a);
+	// if(!mesh.isCreated()||needMeshRegeneration){
+	//  	meshGenerate(shader,ts);
+	//  	needMeshRegeneration = false;
+	// }
+	// glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "textureRect"),0,0,1,1);
+	// glUniform4f(glGetUniformLocation(shader.getOpenGLID(), "color"), ts.textColor.r, ts.textColor.g, ts.textColor.b, ts.textColor.a);
 
-	ts.font->use(shader);
+	// ts.font->use(shader);
 
-	mesh.draw(shader,matrix);
-	return;
+	// mesh.draw(shader,matrix);
+	// return;
 
 	if (!ts.font)
 		Log::info("No font used.");

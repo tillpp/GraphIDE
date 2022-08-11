@@ -145,7 +145,12 @@ void GuiComponent::triggerEvent(const GuiEvent& event){
 		if(feat->handleEvent(event))
 			return;
 	}
+	handleEvent(event);
 }
+void GuiComponent::handleEvent(const GuiEvent& event){
+	
+}
+	
 double GuiComponent::getTotalPosX(){
 	std::lock_guard<std::recursive_mutex> lock(mutex);
 	return cachedTotalPosX;

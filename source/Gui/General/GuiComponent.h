@@ -89,6 +89,8 @@ public:
 
 	void removeFeature(GuiFeature*);
 	void triggerEvent(const GuiEvent& event);
+	virtual void handleEvent(const GuiEvent& event);
+	
 
 	double getTotalPosX();
 	double getTotalPosY();

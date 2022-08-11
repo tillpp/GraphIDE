@@ -66,18 +66,18 @@ Characterspecificeffects CSE
 [] click event
 
 # cursor stuff todo 
-[] cursor 
-[] cursor movement
-[] writing
+[x] cursor 
+[x] cursor movement
+[x] writing
 [] line too big and break line 
-[] delete (backspace,forward) 
-[] ctrl delete(backspace,forward)
-	[] selecting text
-	[] shift
-[] 	mouse select
+[x] delete (backspace,forward) 
+[x] ctrl delete(backspace,forward)
+	[x] selecting text
+[x] shift
+[x] mouse select
 [] open stylewindow (to change style of selected text)
-[] copy ctrl+c
-[] paste ctrl+v
+[x] copy ctrl+c
+[x] paste ctrl+v
 [] cut ctrl+x
 [] undo ctrl+z
 [] redo ctrl+y

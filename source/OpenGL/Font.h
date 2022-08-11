@@ -13,7 +13,12 @@ private:
 	size_t characterSize = 72;
 
 	//glyphs
-	std::set<unsigned int> glyphs; 
+	struct GlyphMetaData{
+		unsigned int character;
+		bool boldness;
+		bool operator<(const GlyphMetaData&) const;
+	};
+	std::set<GlyphMetaData> glyphs; 
 public:
 	Font(std::string path,size_t characterSize = 72);
 	Texture &getTexture();
