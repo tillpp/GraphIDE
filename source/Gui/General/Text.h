@@ -2,14 +2,19 @@
 #include "OpenGL/Shader.h"
 #include "OpenGL/Camera.h"
 #include "OpenGL/Texture.h"
-#include "Gui/Text/TextComponent.h"
-#include "Gui/Text/PolyLineText.h"
+
+#include "Gui/Text/TextSelectionBoxManager.h"
 
 class Text
 	:public GuiComponent
 {
-	PolyLineText plt;
-	
+	// ## Test
+	TextComponent* textComponent;
+	double lastX=0,lastY=0;
+
+	TextSelectionBoxManager textSelectionBoxManager;
+	sf::Clock cursorKeyboardMovementClock;
+	sf::Int32 cursorKeyboardMovementDelay = 1000;
 public:
 	GuiAttribute innerWidth,innerHeight;
 
@@ -21,5 +26,7 @@ public:
 
 	virtual std::string getType()override;	
 
-	int select_index(glm::vec2 mousePositionRelative2Text);
+	virtual void handleEvent(const GuiEvent& event)override;
+	// ## Test
+	int select_index(glm::vec2 mousePosition2GuiComponent);
 };

@@ -1,12 +1,16 @@
 #pragma once
-#include  "Gui/Text/TextGlyphEffect.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "OpenGL/Font.h"
 
-class RainbowEffect : public TextGlyphEffect
+struct TextSettings;
+class TextGlyphEffect
 {
-	sf::Clock clock;
 public:
-	RainbowEffect(/* args */);
 
+	// Before Glyph is determined.
+	// Can be used to change font & boldness.
 	virtual void preGlyph(
 		const TextSettings& textSettings,
 		const sf::String& 	line,
@@ -16,7 +20,7 @@ public:
 		glm::vec4 			&color,
 		bool 				&bold,
 		bool				&italic
-	)override;
+	)=0;
 
 	//before and after each Glyph drawing
 	virtual void preDrawGlyph(
@@ -26,8 +30,7 @@ public:
 		//changeable
 		size_t 				&index,
 		glm::vec4 			&drawRect,
-		GLfloat  			&advance
-	)override;
+		GLfloat  			&advance)=0;
 
 	virtual void postDrawGlyph(
 		const TextSettings& textSettings,
@@ -36,6 +39,7 @@ public:
 		const glm::vec4		&drawRect,
 		//changeable
 		size_t				&index,
-		GLfloat				&advance
-	)override;
+		GLfloat				&advance)=0;
 };
+
+#include "TextSettings.h"
